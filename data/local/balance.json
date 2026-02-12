@@ -1,0 +1,6 @@
+﻿{
+  "version": 1,
+  "economy": { "startCash": 100, "towerSellRefund": 0.6 },
+  "difficulty": { "enemyHpMultiplier": 1.0, "enemySpeedMultiplier": 1.0 },
+  "notes": "Local fallback. Game should try Supabase first, then load this."
+}

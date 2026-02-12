@@ -1,0 +1,14 @@
+﻿{
+  "version": 1,
+  "id": "map1",
+  "name": "Map 1 (Starter)",
+  "themeId": "bakery",
+  "grid": { "w": 12, "h": 8, "tileSize": 1 },
+  "path": [
+    { "x": 0, "y": 4 },
+    { "x": 11, "y": 4 }
+  ],
+  "spawns": [{ "x": 0, "y": 4 }],
+  "goals": [{ "x": 11, "y": 4 }],
+  "notes": "Replace with real export from editor."
+}
