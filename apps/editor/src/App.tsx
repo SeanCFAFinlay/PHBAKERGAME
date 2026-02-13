@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useEditorStore } from './store/editorStore';
 import { AssetLibrary } from './components/AssetLibrary';
 import { AssetInspector } from './components/AssetInspector';
 import { AIPreviewPanel } from './components/AIPreviewPanel';
+import { AssetManifestEntry } from '@shared/types';
 import manifestData from '@assets/manifest.json';
 import overridesData from '@configs/overrides.json';
 import './App.css';
@@ -12,8 +13,9 @@ function App() {
 
   useEffect(() => {
     // Load manifest and overrides on startup
-    setAssets(manifestData.assets);
-    setOverrides(overridesData);
+    setAssets(manifestData.assets as AssetManifestEntry[]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setOverrides(overridesData as any);
   }, [setAssets, setOverrides]);
 
   return (

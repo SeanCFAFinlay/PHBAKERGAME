@@ -10,7 +10,7 @@ export const AIPreviewPanel: React.FC = () => {
   
   const [prompt, setPrompt] = useState('');
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [cropRect, setCropRect] = useState({ x: 0, y: 0, width: 100, height: 100 });
+  const [cropRect] = useState({ x: 0, y: 0, width: 100, height: 100 });
   const [transparencyThreshold, setTransparencyThreshold] = useState(128);
   const [anchorX, setAnchorX] = useState(0.5);
   const [anchorY, setAnchorY] = useState(0.5);

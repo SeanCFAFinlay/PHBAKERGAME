@@ -35,6 +35,7 @@ export const AssetInspector: React.FC = () => {
     setLocalOverride((prev) => {
       const newOverride = { ...prev };
       const keys = path.split('.');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let current: any = newOverride;
       
       for (let i = 0; i < keys.length - 1; i++) {
