@@ -1,1 +1,22 @@
-﻿{}
+﻿{
+  "enemy_basic": {
+    "scale": [1, 1, 1],
+    "offset": [0, 0, 0],
+    "billboard": true,
+    "yAxisOnly": true,
+    "spriteMode": true,
+    "healthbar": { "enabled": true, "offsetY": 1.6, "width": 1.2, "height": 0.12 }
+  },
+  "tower_basic": {
+    "scale": [1, 1, 1],
+    "offset": [0, 0, 0],
+    "spriteMode": true,
+    "iconBadge": {
+      "enabled": true,
+      "icon": "/assets/images/icons/tower_basic_badge.png",
+      "scale": 1,
+      "offsetY": 2.2,
+      "outline": true
+    }
+  }
+}

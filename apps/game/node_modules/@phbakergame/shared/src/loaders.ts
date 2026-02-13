@@ -13,4 +13,3 @@ export async function loadManifestAndOverrides() {
   ]);
   return { manifest, overrides };
 }
-

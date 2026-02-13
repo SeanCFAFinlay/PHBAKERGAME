@@ -13,4 +13,3 @@ export const GAMEPLAY_CAMERA: GameplayCameraConfig = {
   position: [0, 14, 18],
   lookAt: [0, 0, 0]
 };
-
