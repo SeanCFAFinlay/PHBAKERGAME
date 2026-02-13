@@ -15,9 +15,13 @@ export class GameRenderer {
   private animationFrameId?: number;
   private updateCallbacks: Array<(delta: number) => void> = [];
   private clock: THREE.Clock;
+  private resizeHandler: () => void;
 
   constructor(config: RendererConfig) {
     this.clock = new THREE.Clock();
+
+    // Bind resize handler once
+    this.resizeHandler = this.handleResize.bind(this);
 
     // Setup scene
     this.scene = new THREE.Scene();
@@ -68,7 +72,7 @@ export class GameRenderer {
     this.setupLighting();
 
     // Handle window resize
-    window.addEventListener('resize', this.handleResize.bind(this));
+    window.addEventListener('resize', this.resizeHandler);
   }
 
   private setupLighting(): void {
@@ -143,7 +147,7 @@ export class GameRenderer {
 
   public dispose(): void {
     this.stop();
-    window.removeEventListener('resize', this.handleResize.bind(this));
+    window.removeEventListener('resize', this.resizeHandler);
     this.renderer.dispose();
     if (this.stats) {
       this.stats.dom.remove();

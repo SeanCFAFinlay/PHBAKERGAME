@@ -6,14 +6,14 @@
       "name": "Basic Enemy",
       "type": "enemy",
       "file": "/assets/models/enemy_basic.glb",
-      "thumbnail": "/assets/images/enemy_basic.png"
+      "thumbnail": "/assets/images/enemy_basic.svg"
     },
     {
       "id": "tower_basic",
       "name": "Basic Tower",
       "type": "tower",
       "file": "/assets/models/tower_basic.glb",
-      "thumbnail": "/assets/images/tower_basic.png"
+      "thumbnail": "/assets/images/tower_basic.svg"
     }
   ]
 }

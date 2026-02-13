@@ -29,7 +29,7 @@
     "spriteMode": false,
     "iconBadge": {
       "enabled": true,
-      "icon": "/assets/icons/tower_icon.png",
+      "icon": "/assets/icons/tower_icon.svg",
       "scale": 0.5,
       "offsetY": 2.0,
       "outline": true

@@ -12,6 +12,7 @@
     h1{font-size:40px;margin:0 0 10px}
     p{opacity:.85}
     .subtitle{font-size:14px;color:#9fb0c5;margin-bottom:32px}
+    .note{margin-top:32px;font-size:12px;color:#666}
   </style>
 </head>
 <body>
@@ -20,11 +21,17 @@
     <p class="subtitle">Production-Ready Tower Defense Game + Editor Dashboard</p>
     <p>Select an application:</p>
     <p>
-      <a href="http://localhost:3000/" target="_blank">🎮 Play Game (Dev)</a>
-      <a href="http://localhost:3001/" target="_blank">🎨 Editor Dashboard (Dev)</a>
+      <a href="./apps/game/dist/" target="_blank">🎮 Play Game</a>
+      <a href="./apps/editor/dist/" target="_blank">🎨 Editor Dashboard</a>
     </p>
-    <p style="margin-top:32px;font-size:12px;color:#666">
-      Production builds available in /apps/game/dist and /apps/editor/dist after running `npm run build`
+    <p class="note">
+      <strong>Development:</strong><br>
+      Run <code>npm run dev:game</code> for game (port 3000)<br>
+      Run <code>npm run dev:editor</code> for editor (port 3001)
+    </p>
+    <p class="note">
+      <strong>Production:</strong><br>
+      Run <code>npm run build</code> to build both apps
     </p>
   </div>
 </body>

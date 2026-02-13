@@ -27,23 +27,23 @@ export interface MaterialOverride {
 }
 
 export interface HealthbarConfig {
-  enabled: boolean;
-  offsetY: number;
-  width: number;
-  height: number;
+  enabled?: boolean;
+  offsetY?: number;
+  width?: number;
+  height?: number;
 }
 
 export interface HitboxConfig {
-  size: [number, number, number];
-  debug: boolean;
+  size?: [number, number, number];
+  debug?: boolean;
 }
 
 export interface IconBadgeConfig {
-  enabled: boolean;
-  icon: string;
-  scale: number;
-  offsetY: number;
-  outline: boolean;
+  enabled?: boolean;
+  icon?: string;
+  scale?: number;
+  offsetY?: number;
+  outline?: boolean;
 }
 
 export interface AssetOverride {
