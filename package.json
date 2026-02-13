@@ -1,12 +1,10 @@
 ﻿{
   "name": "phbakergame",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "dev:game": "npm --workspace apps/game run dev",
-    "dev:editor": "npm --workspace apps/editor run dev",
-    "build": "npm --workspace apps/game run build && npm --workspace apps/editor run build",
-    "lint": "echo \"lint: add eslint later\"",
+    "dev:game": "cd apps/game && npm run dev",
+    "dev:editor": "cd apps/editor && npm run dev",
+    "build": "cd apps/game && npm run build && cd ../editor && npm run build",
     "validate:assets": "node scripts/validate-assets.mjs"
   }
 }
