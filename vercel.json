@@ -1,0 +1,4 @@
+﻿{
+  "buildCommand": "cd apps/game && npm install && npm run build",
+  "outputDirectory": "apps/game/dist"
+}

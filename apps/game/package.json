@@ -1,0 +1,19 @@
+﻿{
+  "name": "@app/game",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "three": "^0.166.1",
+    "@phbakergame/shared": "file:../../packages/shared"
+  },
+  "devDependencies": {
+    "vite": "^5.4.2",
+    "typescript": "^5.5.4"
+  }
+}
+
+

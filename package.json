@@ -1,0 +1,10 @@
+﻿{
+  "name": "phbakergame",
+  "private": true,
+  "scripts": {
+    "dev:game": "cd apps/game && npm run dev",
+    "dev:editor": "cd apps/editor && npm run dev",
+    "build": "cd apps/game && npm run build && cd ../editor && npm run build",
+    "validate:assets": "node scripts/validate-assets.mjs"
+  }
+}

@@ -1,0 +1,21 @@
+﻿{
+  "version": 1,
+  "assets": [
+    {
+      "id": "enemy_basic",
+      "name": "Basic Enemy",
+      "type": "enemy",
+      "file": "/assets/images/enemy_basic.png",
+      "thumbnail": "/assets/thumbnails/enemy_basic.png",
+      "description": "Default billboard enemy"
+    },
+    {
+      "id": "tower_basic",
+      "name": "Basic Tower",
+      "type": "tower",
+      "file": "/assets/images/tower_basic.png",
+      "thumbnail": "/assets/thumbnails/tower_basic.png",
+      "description": "Tower sprite with icon badge"
+    }
+  ]
+}
