@@ -1,5 +1,5 @@
-﻿import * as THREE from "three";
-import { applyBillboard } from "../render/Billboard";
+﻿import * as THREE from 'three';
+import { applyBillboard } from '../render/Billboard';
 
 export function startLoop(opts: {
   renderer: THREE.WebGLRenderer;
@@ -14,7 +14,7 @@ export function startLoop(opts: {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
-  window.addEventListener("resize", onResize);
+  window.addEventListener('resize', onResize);
 
   const clock = new THREE.Clock();
 

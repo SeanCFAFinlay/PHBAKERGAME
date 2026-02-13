@@ -1,7 +1,7 @@
-﻿import * as THREE from "three";
-import type { AssetManifest, Overrides } from "@phbakergame/shared/schema";
-import { Healthbar } from "../render/Healthbar";
-import { createIconBadge } from "../render/IconBadge";
+﻿import * as THREE from 'three';
+import type { AssetManifest, Overrides, ManifestAsset } from '@phbakergame/shared/schema';
+import { Healthbar } from '../render/Healthbar';
+import { createIconBadge } from '../render/IconBadge';
 
 type Spawned = {
   id: string;
@@ -23,8 +23,8 @@ export class AssetSpawner {
     private overrides: Overrides
   ) {}
 
-  async spawn(id: string, kind: "enemy" | "tower", position: THREE.Vector3) {
-    const asset = this.manifest.assets.find((a) => a.id === id);
+  async spawn(id: string, kind: 'enemy' | 'tower', position: THREE.Vector3) {
+    const asset = this.manifest.assets.find((a: ManifestAsset) => a.id === id);
     if (!asset) throw new Error(`Missing manifest asset: ${id}`);
 
     const ov = this.overrides[id] ?? {};
@@ -62,7 +62,7 @@ export class AssetSpawner {
     root.add(visual);
 
     let healthbar: Healthbar | undefined;
-    if (kind === "enemy" && (ov.healthbar?.enabled ?? true)) {
+    if (kind === 'enemy' && (ov.healthbar?.enabled ?? true)) {
       const hb = new Healthbar(ov.healthbar?.width ?? 1.2, ov.healthbar?.height ?? 0.12);
       hb.group.position.y = ov.healthbar?.offsetY ?? 1.6;
       root.add(hb.group);
@@ -71,7 +71,7 @@ export class AssetSpawner {
     }
 
     let iconBadge: THREE.Object3D | undefined;
-    if (kind === "tower" && ov.iconBadge?.enabled) {
+    if (kind === 'tower' && ov.iconBadge?.enabled) {
       const badge = await createIconBadge(ov.iconBadge.icon);
       badge.position.y = ov.iconBadge.offsetY ?? 2.2;
       badge.scale.setScalar(ov.iconBadge.scale ?? 1);
@@ -87,8 +87,8 @@ export class AssetSpawner {
       visual,
       healthbar,
       iconBadge,
-      billboard: ov.billboard ?? (kind === "enemy"),
-      yAxisOnly: ov.yAxisOnly ?? true
+      billboard: ov.billboard ?? kind === 'enemy',
+      yAxisOnly: ov.yAxisOnly ?? true,
     };
 
     this.spawned.push(spawned);
@@ -100,5 +100,7 @@ export class AssetSpawner {
     spawned.healthbar?.setPercent(p);
   }
 
-  getAll() { return this.spawned; }
+  getAll() {
+    return this.spawned;
+  }
 }
