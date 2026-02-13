@@ -1,0 +1,29 @@
+﻿export type AssetType = "enemy" | "tower" | "prop" | "ui";
+
+export type ManifestAsset = {
+  id: string;
+  name: string;
+  type: AssetType;
+  file: string;
+  thumbnail: string;
+  description?: string;
+  tags?: string[];
+};
+
+export type AssetManifest = {
+  version: number;
+  assets: ManifestAsset[];
+};
+
+export type Vec3 = [number, number, number];
+
+export type OverridesEntry = {
+  scale?: Vec3;
+  rotation?: Vec3;
+  offset?: Vec3;
+  billboard?: boolean;
+  yAxisOnly?: boolean;
+  spriteMode?: boolean;
+};
+
+export type Overrides = Record<string, OverridesEntry>;
