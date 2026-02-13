@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "enemy_basic",
+      "name": "Basic Enemy",
+      "type": "enemy",
+      "file": "/assets/models/enemy_basic.glb",
+      "thumbnail": "/assets/images/enemy_basic.png"
+    },
+    {
+      "id": "tower_basic",
+      "name": "Basic Tower",
+      "type": "tower",
+      "file": "/assets/models/tower_basic.glb",
+      "thumbnail": "/assets/images/tower_basic.png"
+    }
+  ]
+}

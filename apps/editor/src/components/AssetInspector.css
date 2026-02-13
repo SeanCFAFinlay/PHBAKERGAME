@@ -1,0 +1,101 @@
+.asset-inspector {
+  padding: 20px;
+  background: linear-gradient(180deg, #0f1726, #0c1320);
+  border: 1px solid #1b2636;
+  border-radius: 18px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.asset-inspector h2 {
+  margin: 0 0 20px;
+  font-size: 16px;
+  color: #e7eef8;
+  border-bottom: 1px solid #1b2636;
+  padding-bottom: 12px;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #9fb0c5;
+}
+
+.inspector-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inspector-section {
+  background: #0b1220;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #1b2636;
+}
+
+.inspector-section h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #e7eef8;
+}
+
+.inspector-section h4 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #9fb0c5;
+}
+
+.asset-id {
+  margin: 0;
+  font-size: 12px;
+  color: #9fb0c5;
+}
+
+.inspector-section label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #9fb0c5;
+}
+
+.inspector-section label:has(input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+}
+
+.inspector-section input[type="text"],
+.inspector-section input[type="number"] {
+  padding: 8px;
+  background: #070b10;
+  border: 1px solid #22314a;
+  border-radius: 8px;
+  color: #e7eef8;
+  font-size: 13px;
+}
+
+.inspector-section input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+.save-btn {
+  padding: 12px;
+  background: linear-gradient(180deg, #1d4f7a, #0b1220);
+  border: 1px solid #2a4c73;
+  border-radius: 12px;
+  color: #e7eef8;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-btn:hover {
+  background: linear-gradient(180deg, #2a5f8a, #0b1220);
+  border-color: #55d6ff;
+}

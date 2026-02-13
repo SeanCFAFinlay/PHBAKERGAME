@@ -1,0 +1,42 @@
+{
+  "enemy_basic": {
+    "scale": [1, 1, 1],
+    "rotation": [0, 0, 0],
+    "offset": [0, 0, 0],
+    "billboard": true,
+    "spriteMode": false,
+    "lod": {
+      "near": 10,
+      "mid": 20,
+      "far": 40
+    },
+    "healthbar": {
+      "enabled": true,
+      "offsetY": 1.5,
+      "width": 1.0,
+      "height": 0.15
+    },
+    "hitbox": {
+      "size": [0.8, 1.2, 0.8],
+      "debug": false
+    }
+  },
+  "tower_basic": {
+    "scale": [1, 1, 1],
+    "rotation": [0, 0, 0],
+    "offset": [0, 0, 0],
+    "billboard": false,
+    "spriteMode": false,
+    "iconBadge": {
+      "enabled": true,
+      "icon": "/assets/icons/tower_icon.png",
+      "scale": 0.5,
+      "offsetY": 2.0,
+      "outline": true
+    },
+    "hitbox": {
+      "size": [1.0, 2.0, 1.0],
+      "debug": false
+    }
+  }
+}
