@@ -1,0 +1,5 @@
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" fill="#ff6666"/>
+  <circle cx="32" cy="32" r="20" fill="#ff3333"/>
+  <text x="32" y="40" text-anchor="middle" font-size="24" fill="white">E</text>
+</svg>

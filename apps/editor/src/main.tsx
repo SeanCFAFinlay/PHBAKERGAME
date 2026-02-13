@@ -1,14 +1,9 @@
-﻿import React from "react";
-import { createRoot } from "react-dom/client";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 
-function App() {
-  return (
-    <div style={{ padding: 20 }}>
-      <h1 style={{ margin: 0 }}>Editor is running ✅</h1>
-      <p style={{ opacity: 0.8 }}>Next: plug in Asset Dashboard + AI Preview Panel.</p>
-    </div>
-  );
-}
-
-createRoot(document.getElementById("root")!).render(<App />);
-
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
