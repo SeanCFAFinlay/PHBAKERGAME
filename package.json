@@ -1,7 +1,7 @@
 {
   "name": "phbakergame",
   "private": true,
-  "workspaces": ["apps/*", "shared"],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev:game": "npm --workspace apps/game run dev",
     "dev:editor": "npm --workspace apps/editor run dev",
