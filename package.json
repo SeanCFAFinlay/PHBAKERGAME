@@ -1,0 +1,18 @@
+{
+  "name": "phbakergame",
+  "private": true,
+  "workspaces": ["apps/*", "shared"],
+  "scripts": {
+    "dev:game": "npm --workspace apps/game run dev",
+    "dev:editor": "npm --workspace apps/editor run dev",
+    "build": "npm --workspace shared run build && npm --workspace apps/game run build && npm --workspace apps/editor run build",
+    "lint": "npm --workspace apps/game run lint && npm --workspace apps/editor run lint && npm --workspace shared run lint",
+    "validate:assets": "node scripts/validate-assets.mjs",
+    "optimize:gltf": "echo \"Add gltf-transform CLI flow here\"",
+    "compress:textures": "echo \"Add toktx KTX2 compression flow here\""
+  },
+  "devDependencies": {
+    "eslint": "^9.8.0",
+    "prettier": "^3.3.3"
+  }
+}
