@@ -24,7 +24,9 @@ export class AssetSpawner {
   ) {}
 
   async spawn(id: string, kind: "enemy" | "tower", position: THREE.Vector3) {
-    const asset = this.manifest.assets.find((a) => a.id === id);
+    const asset = this.manifest.assets.find(
+      (a: AssetManifest["assets"][number]) => a.id === id
+    );
     if (!asset) throw new Error(`Missing manifest asset: ${id}`);
 
     const ov = this.overrides[id] ?? {};
