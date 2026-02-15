@@ -49,10 +49,10 @@ export class Healthbar {
 
   setHealth(healthPercent: number): void {
     this.currentHealth = Math.max(0, Math.min(1, healthPercent));
-    
+
     // Scale the bar horizontally based on health
     this.bar.scale.x = this.currentHealth;
-    
+
     // Adjust position to keep left-aligned
     const offset = (this.config.width * (1 - this.currentHealth)) / 2;
     this.bar.position.x = -offset;

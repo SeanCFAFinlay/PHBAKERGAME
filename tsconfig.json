@@ -1,7 +1,4 @@
 {
   "files": [],
-  "references": [
-    { "path": "./apps/game" },
-    { "path": "./apps/editor" }
-  ]
+  "references": [{ "path": "./apps/game" }, { "path": "./apps/editor" }]
 }
