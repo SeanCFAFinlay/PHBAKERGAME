@@ -1,13 +1,5 @@
-﻿{
-  "builds": [
-    {
-      "src": "apps/game/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+{
+  "buildCommand": "npm run build --workspace=apps/game",
+  "outputDirectory": "apps/game/dist",
+  "framework": null
 }
