@@ -1,4 +1,13 @@
 ﻿{
-  "buildCommand": "cd apps/game && npm install && npm run build",
-  "outputDirectory": "apps/game/dist"
+  "builds": [
+    {
+      "src": "apps/game/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
 }
