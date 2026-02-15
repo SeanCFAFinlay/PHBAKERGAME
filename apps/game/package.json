@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@phbakergame/shared": "*",
     "three": "^0.160.0",
     "stats.js": "^0.17.0"
   },

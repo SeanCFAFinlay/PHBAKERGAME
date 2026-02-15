@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "./apps/game" },
-    { "path": "./apps/editor" }
+    { "path": "./apps/editor" },
+    { "path": "./packages/shared" }
   ]
 }
