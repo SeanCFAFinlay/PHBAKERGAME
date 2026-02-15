@@ -6,7 +6,7 @@ interface EditorState {
   assets: AssetManifestEntry[];
   overrides: Record<string, AssetOverride>;
   currentTab: 'assets' | 'maps' | 'waves' | 'ai-preview';
-  
+
   setSelectedAsset: (asset: AssetManifestEntry | null) => void;
   setAssets: (assets: AssetManifestEntry[]) => void;
   setOverrides: (overrides: Record<string, AssetOverride>) => void;
@@ -19,7 +19,7 @@ export const useEditorStore = create<EditorState>((set) => ({
   assets: [],
   overrides: {},
   currentTab: 'assets',
-  
+
   setSelectedAsset: (asset) => set({ selectedAsset: asset }),
   setAssets: (assets) => set({ assets }),
   setOverrides: (overrides) => set({ overrides }),

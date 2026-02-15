@@ -43,7 +43,7 @@ export class IconBadge {
     try {
       const texture = await this.textureLoader.loadAsync(iconPath);
       texture.colorSpace = THREE.SRGBColorSpace;
-      
+
       if (this.sprite instanceof THREE.Sprite) {
         (this.sprite.material as THREE.SpriteMaterial).map = texture;
         (this.sprite.material as THREE.SpriteMaterial).needsUpdate = true;
@@ -61,21 +61,21 @@ export class IconBadge {
     canvas.width = 64;
     canvas.height = 64;
     const ctx = canvas.getContext('2d')!;
-    
+
     // Draw a simple icon background
     ctx.fillStyle = '#4444ff';
     ctx.fillRect(0, 0, 64, 64);
-    
+
     // Add outline if configured
     if (this.config.outline) {
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 4;
       ctx.strokeRect(2, 2, 60, 60);
     }
-    
+
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
-    
+
     if (this.sprite instanceof THREE.Sprite) {
       (this.sprite.material as THREE.SpriteMaterial).map = texture;
       (this.sprite.material as THREE.SpriteMaterial).needsUpdate = true;

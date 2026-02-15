@@ -4,12 +4,8 @@ dist/
 build/
 .env
 .env.local
+.env*.local
 *.log
 .DS_Store
 Thumbs.db
 .vercel
-.env*.local
-
-node_modules/
-.vercel
-.env.local

@@ -1,4 +1,4 @@
-﻿import * as THREE from "three";
+﻿import * as THREE from 'three';
 
 export function createRenderer() {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -12,7 +12,7 @@ export function createRenderer() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  document.body.innerHTML = "";
+  document.body.innerHTML = '';
   document.body.appendChild(renderer.domElement);
   return renderer;
 }
