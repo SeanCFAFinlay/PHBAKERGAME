@@ -7,7 +7,7 @@ export function createEnemy(scene: THREE.Scene, textureUrl: string) {
   const material = new THREE.SpriteMaterial({
     map: texture,
     transparent: true,
-    depthWrite: false
+    depthWrite: false,
   });
 
   const sprite = new THREE.Sprite(material);
@@ -37,7 +37,7 @@ export function createTower(scene: THREE.Scene, iconUrl: string) {
   const badgeMaterial = new THREE.SpriteMaterial({
     map: texture,
     transparent: true,
-    depthWrite: false
+    depthWrite: false,
   });
 
   const badge = new THREE.Sprite(badgeMaterial);

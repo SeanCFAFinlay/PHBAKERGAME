@@ -4,7 +4,7 @@ import './AssetInspector.css';
 
 export const AssetInspector: React.FC = () => {
   const { selectedAsset, overrides, updateOverride } = useEditorStore();
-  
+
   const [scaleStr, setScaleStr] = useState('1, 1, 1');
   const [rotationStr, setRotationStr] = useState('0, 0, 0');
   const [offsetStr, setOffsetStr] = useState('0, 0, 0');
@@ -30,27 +30,27 @@ export const AssetInspector: React.FC = () => {
 
   const handleSave = () => {
     if (!selectedAsset) return;
-    
+
     const override = overrides[selectedAsset.id] || {};
-    
+
     // Parse and update scale
     const scaleValues = scaleStr.split(',').map((v) => parseFloat(v.trim()));
     if (scaleValues.length === 3 && scaleValues.every((v) => !isNaN(v))) {
       override.scale = scaleValues as [number, number, number];
     }
-    
+
     // Parse and update rotation
     const rotationValues = rotationStr.split(',').map((v) => parseFloat(v.trim()));
     if (rotationValues.length === 3 && rotationValues.every((v) => !isNaN(v))) {
       override.rotation = rotationValues as [number, number, number];
     }
-    
+
     // Parse and update offset
     const offsetValues = offsetStr.split(',').map((v) => parseFloat(v.trim()));
     if (offsetValues.length === 3 && offsetValues.every((v) => !isNaN(v))) {
       override.offset = offsetValues as [number, number, number];
     }
-    
+
     updateOverride(selectedAsset.id, override);
   };
 
@@ -79,11 +79,7 @@ export const AssetInspector: React.FC = () => {
           <h4>Transform</h4>
           <label>
             Scale
-            <input
-              type="text"
-              value={scaleStr}
-              onChange={(e) => setScaleStr(e.target.value)}
-            />
+            <input type="text" value={scaleStr} onChange={(e) => setScaleStr(e.target.value)} />
           </label>
           <label>
             Rotation
@@ -95,11 +91,7 @@ export const AssetInspector: React.FC = () => {
           </label>
           <label>
             Offset
-            <input
-              type="text"
-              value={offsetStr}
-              onChange={(e) => setOffsetStr(e.target.value)}
-            />
+            <input type="text" value={offsetStr} onChange={(e) => setOffsetStr(e.target.value)} />
           </label>
         </div>
 
@@ -110,7 +102,10 @@ export const AssetInspector: React.FC = () => {
               type="checkbox"
               checked={currentOverride.billboard || false}
               onChange={(e) => {
-                updateOverride(selectedAsset.id, { ...currentOverride, billboard: e.target.checked });
+                updateOverride(selectedAsset.id, {
+                  ...currentOverride,
+                  billboard: e.target.checked,
+                });
               }}
             />
             Billboard Mode
@@ -120,7 +115,10 @@ export const AssetInspector: React.FC = () => {
               type="checkbox"
               checked={currentOverride.spriteMode || false}
               onChange={(e) => {
-                updateOverride(selectedAsset.id, { ...currentOverride, spriteMode: e.target.checked });
+                updateOverride(selectedAsset.id, {
+                  ...currentOverride,
+                  spriteMode: e.target.checked,
+                });
               }}
             />
             Sprite Mode
@@ -152,7 +150,10 @@ export const AssetInspector: React.FC = () => {
                 onChange={(e) => {
                   updateOverride(selectedAsset.id, {
                     ...currentOverride,
-                    healthbar: { ...(currentOverride.healthbar || {}), offsetY: parseFloat(e.target.value) },
+                    healthbar: {
+                      ...(currentOverride.healthbar || {}),
+                      offsetY: parseFloat(e.target.value),
+                    },
                   });
                 }}
               />
@@ -166,7 +167,10 @@ export const AssetInspector: React.FC = () => {
                 onChange={(e) => {
                   updateOverride(selectedAsset.id, {
                     ...currentOverride,
-                    healthbar: { ...(currentOverride.healthbar || {}), width: parseFloat(e.target.value) },
+                    healthbar: {
+                      ...(currentOverride.healthbar || {}),
+                      width: parseFloat(e.target.value),
+                    },
                   });
                 }}
               />
@@ -180,7 +184,10 @@ export const AssetInspector: React.FC = () => {
                 onChange={(e) => {
                   updateOverride(selectedAsset.id, {
                     ...currentOverride,
-                    healthbar: { ...(currentOverride.healthbar || {}), height: parseFloat(e.target.value) },
+                    healthbar: {
+                      ...(currentOverride.healthbar || {}),
+                      height: parseFloat(e.target.value),
+                    },
                   });
                 }}
               />
@@ -226,7 +233,10 @@ export const AssetInspector: React.FC = () => {
                 onChange={(e) => {
                   updateOverride(selectedAsset.id, {
                     ...currentOverride,
-                    iconBadge: { ...(currentOverride.iconBadge || {}), scale: parseFloat(e.target.value) },
+                    iconBadge: {
+                      ...(currentOverride.iconBadge || {}),
+                      scale: parseFloat(e.target.value),
+                    },
                   });
                 }}
               />
@@ -240,7 +250,10 @@ export const AssetInspector: React.FC = () => {
                 onChange={(e) => {
                   updateOverride(selectedAsset.id, {
                     ...currentOverride,
-                    iconBadge: { ...(currentOverride.iconBadge || {}), offsetY: parseFloat(e.target.value) },
+                    iconBadge: {
+                      ...(currentOverride.iconBadge || {}),
+                      offsetY: parseFloat(e.target.value),
+                    },
                   });
                 }}
               />

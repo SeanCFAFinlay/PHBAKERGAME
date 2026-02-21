@@ -1,4 +1,4 @@
-﻿import * as THREE from "three";
+﻿import * as THREE from 'three';
 
 export function applyBillboard(obj: THREE.Object3D, camera: THREE.Camera, yAxisOnly: boolean) {
   if (yAxisOnly) {
