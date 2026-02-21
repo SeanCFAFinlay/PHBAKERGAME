@@ -7,7 +7,7 @@ export const AIPreviewPanel: React.FC = () => {
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  
+
   const [prompt, setPrompt] = useState('');
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [cropRect] = useState({ x: 0, y: 0, width: 100, height: 100 });
@@ -29,7 +29,7 @@ export const AIPreviewPanel: React.FC = () => {
     // Setup Three.js scene with same camera as game
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(backgroundColor);
-    
+
     const camera = new THREE.PerspectiveCamera(
       50, // Same FOV as game
       canvasRef.current.clientWidth / canvasRef.current.clientHeight,
@@ -38,7 +38,7 @@ export const AIPreviewPanel: React.FC = () => {
     );
     camera.position.set(0, 12, 15); // Same camera position as game
     camera.lookAt(0, 0, 0);
-    
+
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
       antialias: true,
@@ -47,7 +47,7 @@ export const AIPreviewPanel: React.FC = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    
+
     sceneRef.current = scene;
     rendererRef.current = renderer;
     cameraRef.current = camera;
@@ -55,7 +55,7 @@ export const AIPreviewPanel: React.FC = () => {
     // Add lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
-    
+
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(5, 10, 5);
     scene.add(directionalLight);
@@ -72,13 +72,13 @@ export const AIPreviewPanel: React.FC = () => {
     let animationId: number;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
-      
+
       if (turntable && cameraRef.current) {
         cameraRef.current.position.x = Math.sin(Date.now() * 0.001) * 15;
         cameraRef.current.position.z = Math.cos(Date.now() * 0.001) * 15;
         cameraRef.current.lookAt(0, 0, 0);
       }
-      
+
       renderer.render(scene, camera);
     };
     animate();
@@ -184,7 +184,7 @@ export const AIPreviewPanel: React.FC = () => {
       <div className="ai-controls">
         <h3>AI Preview Panel</h3>
         <p className="subtitle">Workflow support - metadata only (no AI generation)</p>
-        
+
         <div className="control-group">
           <label>
             Prompt (Metadata)
@@ -196,11 +196,7 @@ export const AIPreviewPanel: React.FC = () => {
           </label>
         </div>
 
-        <div
-          className="drop-zone"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-        >
+        <div className="drop-zone" onDrop={handleDrop} onDragOver={handleDragOver}>
           {uploadedImage ? (
             <img src={uploadedImage} alt="Uploaded" />
           ) : (
@@ -208,12 +204,7 @@ export const AIPreviewPanel: React.FC = () => {
               <p>Drop image here or</p>
               <label className="upload-btn">
                 Choose File
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  hidden
-                />
+                <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
               </label>
             </div>
           )}

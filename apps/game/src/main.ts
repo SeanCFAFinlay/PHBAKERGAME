@@ -41,7 +41,7 @@ class Game {
 
     // Demo: Add an enemy with billboard and healthbar
     this.addDemoEnemy(new THREE.Vector3(-3, 0.5, 0));
-    
+
     // Demo: Add a tower with icon badge
     this.addDemoTower(new THREE.Vector3(3, 0, 0));
 
@@ -78,11 +78,7 @@ class Game {
     enemy.add(healthbar.getObject());
 
     // Make healthbar also billboard
-    const healthbarBillboard = new Billboard(
-      healthbar.getObject(),
-      this.renderer.camera,
-      'full'
-    );
+    const healthbarBillboard = new Billboard(healthbar.getObject(), this.renderer.camera, 'full');
     this.billboards.push(healthbarBillboard);
   }
 
@@ -110,11 +106,7 @@ class Game {
     tower.add(iconBadge.getObject());
 
     // Make icon badge billboard
-    const badgeBillboard = new Billboard(
-      iconBadge.getObject(),
-      this.renderer.camera,
-      'full'
-    );
+    const badgeBillboard = new Billboard(iconBadge.getObject(), this.renderer.camera, 'full');
     this.billboards.push(badgeBillboard);
   }
 

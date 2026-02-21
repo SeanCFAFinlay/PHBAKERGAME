@@ -1,6 +1,4 @@
 ﻿{
   "version": 1,
-  "themes": [
-    { "id": "bakery", "name": "Bakery", "ground": "#3b2a1f", "path": "#d8b384" }
-  ]
+  "themes": [{ "id": "bakery", "name": "Bakery", "ground": "#3b2a1f", "path": "#d8b384" }]
 }
