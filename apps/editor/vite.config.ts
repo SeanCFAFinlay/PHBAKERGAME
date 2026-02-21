@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
 export default defineConfig({
-   b  base: '/editor/',
+  base: '/editor/',
   plugins: [react()],
   resolve: {
     alias: {
