@@ -1,0 +1,36 @@
+﻿[CmdletBinding()]
+param(
+  [string]$RepoRoot = (Get-Location).Path
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+function Ensure-Dir([string]$p) { New-Item -ItemType Directory -Force -Path $p | Out-Null }
+function Assert-Exists([string]$p) { if (-not (Test-Path $p)) { throw "Missing: $p" } }
+
+$RepoRoot = (Resolve-Path $RepoRoot).Path
+Push-Location $RepoRoot
+try {
+  Write-Host "RepoRoot: $RepoRoot"
+
+  Assert-Exists ".git"
+  Assert-Exists ".\src\core"
+  Assert-Exists ".\src\graphics"
+  Assert-Exists ".\src\ui"
+  Assert-Exists ".\src\utils"
+  Assert-Exists ".\src\game"
+  Assert-Exists ".\src\main.js"
+  Assert-Exists ".\index.html"
+  Assert-Exists ".\vite.config.js"
+
+  Ensure-Dir ".\apps\single-path-td\src"
+  Ensure-Dir ".\apps\multi-path-td\src"
+  Ensure-Dir ".\packages\engine\src"
+  Ensure-Dir ".\shared\assets"
+
+  # Workspace file (ensure correct)
+@'
+packages:
+  - "apps/*"
+  - "packages/*"

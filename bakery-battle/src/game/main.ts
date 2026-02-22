@@ -1,4 +1,4 @@
-﻿import { createBattle, screenToCell } from "@/game/scenes/battle";
+import { createBattle } from "@/game/scenes/battle";
 
 const canvasEl = document.getElementById("game");
 if (!(canvasEl instanceof HTMLCanvasElement)) {
@@ -12,8 +12,6 @@ if (!ctx2d) {
 }
 const ctx: CanvasRenderingContext2D = ctx2d;
 
-const CELL_SIZE = 48;
-
 function resize(): void {
   const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.floor(window.innerWidth * dpr);
@@ -26,14 +24,13 @@ function resize(): void {
 window.addEventListener("resize", resize);
 resize();
 
-const battle = createBattle({ cellSize: CELL_SIZE });
+const battle = createBattle({ cellSize: 48 });
 
 canvas.addEventListener("click", (e: MouseEvent) => {
   const rect = canvas.getBoundingClientRect();
   const mx = e.clientX - rect.left;
   const my = e.clientY - rect.top;
-  const cell = screenToCell(mx, my, CELL_SIZE);
-  battle.setTargetCell(cell);
+  (battle as any).handleClick(mx, my);
 });
 
 let last = performance.now();
@@ -49,6 +46,5 @@ function loop(now: number): void {
 requestAnimationFrame(loop);
 
 export function startGame(): void {
-  // Entry point retained for src/main.ts; game currently boots on import.
-  // Later, move bootstrapping into this function if desired.
+  // Game boots on import (kept for compatibility).
 }
