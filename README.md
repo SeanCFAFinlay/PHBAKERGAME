@@ -67,7 +67,8 @@ PHBAKERGAME/
 ├── apps/
 │   ├── game/          # Game runtime (Vite + TS)
 │   └── editor/        # Editor dashboard (React + TS)
-├── shared/            # Shared types and utilities
+├── packages/shared/   # Shared runtime schema, loaders, camera config
+├── shared/            # Shared type definitions
 ├── assets/            # Game assets (models, images, icons)
 │   └── manifest.json  # Asset manifest
 ├── configs/           # Configuration files
@@ -76,6 +77,10 @@ PHBAKERGAME/
 │   └── local/         # Local data files
 └── package.json       # Root workspace config
 ```
+
+Shared code layout:
+- `packages/shared/` exports runtime helpers used by the game/editor (schema, loaders, camera config).
+- `shared/types/` contains type-only definitions consumed by the editor UI.
 
 ## ✨ Features
 
