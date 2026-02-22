@@ -11,5 +11,5 @@ export const GAMEPLAY_CAMERA: GameplayCameraConfig = {
   near: 0.1,
   far: 500,
   position: [0, 14, 18],
-  lookAt: [0, 0, 0]
+  lookAt: [0, 0, 0],
 };

@@ -1,11 +1,11 @@
-﻿export type AssetType = "enemy" | "tower" | "prop" | "ui";
+﻿export type AssetType = 'enemy' | 'tower' | 'prop' | 'ui';
 
 export type ManifestAsset = {
   id: string;
   name: string;
   type: AssetType;
-  file: string;       // /assets/images/foo.png or /assets/models/bar.glb
-  thumbnail: string;  // /assets/thumbnails/foo.png
+  file: string; // /assets/images/foo.png or /assets/models/bar.glb
+  thumbnail: string; // /assets/thumbnails/foo.png
   description?: string;
   tags?: string[];
 };

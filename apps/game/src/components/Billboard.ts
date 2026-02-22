@@ -21,10 +21,10 @@ export class Billboard {
       // Y-axis only - object rotates around Y axis to face camera
       const cameraPosition = this.camera.position.clone();
       const objectPosition = this.object.position.clone();
-      
+
       // Project to XZ plane (zero out Y)
       cameraPosition.y = objectPosition.y;
-      
+
       this.object.lookAt(cameraPosition);
     }
   }

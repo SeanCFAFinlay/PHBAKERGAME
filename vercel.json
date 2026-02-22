@@ -1,6 +1,6 @@
 {
-  "version": 2,
   "installCommand": "npm ci",
   "buildCommand": "npm run build --workspace=apps/game",
-  "outputDirectory": "apps/game/dist"
+  "outputDirectory": "apps/game/dist",
+  "framework": null
 }
