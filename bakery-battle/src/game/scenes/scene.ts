@@ -1,4 +1,4 @@
-import { Engine } from "../core/engine";
+﻿import { Engine } from "../core/engine";
 
 export type Point = { x: number; y: number };
 
@@ -26,7 +26,7 @@ export class Scene {
     // Optional override
   }
 
-  update(dt: number): void {
+  update(_dt: number): void {
     // Override required
   }
 
