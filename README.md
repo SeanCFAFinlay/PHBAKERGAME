@@ -25,11 +25,13 @@ npm install
 ### Development
 
 Run the game in development mode:
+
 ```bash
 npm run dev:game
 ```
 
 Run the editor dashboard:
+
 ```bash
 npm run dev:editor
 ```
@@ -37,11 +39,13 @@ npm run dev:editor
 ### Build
 
 Build both applications:
+
 ```bash
 npm run build
 ```
 
 Build individually:
+
 ```bash
 npm run build:game
 npm run build:editor
@@ -76,6 +80,7 @@ PHBAKERGAME/
 ## ✨ Features
 
 ### Game Runtime
+
 - ✅ Modern Three.js rendering with correct color spaces
 - ✅ Billboard system (full camera-facing + Y-axis-only)
 - ✅ Dynamic healthbars for enemies
@@ -86,6 +91,7 @@ PHBAKERGAME/
 - ✅ No CDN dependencies - fully offline capable
 
 ### Editor Dashboard
+
 - ✅ Asset library with thumbnails
 - ✅ Asset inspector with live editing
 - ✅ Map editor (coming soon)
@@ -96,6 +102,7 @@ PHBAKERGAME/
 - ✅ Modern React 18 + TypeScript
 
 ### AI Preview Panel (Workflow Support)
+
 - ✅ Prompt text field (metadata)
 - ✅ Drag-and-drop image upload
 - ✅ Live Three.js preview with game camera
@@ -140,6 +147,7 @@ The application runs fully offline after installation. All dependencies are bund
 ### Asset Manifest (`/assets/manifest.json`)
 
 Defines all available assets with metadata:
+
 - `id` - Unique identifier
 - `name` - Display name
 - `type` - Asset type (enemy, tower, prop, ui)
@@ -149,6 +157,7 @@ Defines all available assets with metadata:
 ### Overrides Config (`/configs/overrides.json`)
 
 Per-asset rendering configuration:
+
 - Transform (scale, rotation, offset)
 - Billboard mode
 - Sprite mode
@@ -161,6 +170,7 @@ Per-asset rendering configuration:
 ## 🛠️ Development
 
 The project uses:
+
 - ESLint for code quality
 - Prettier for code formatting
 - TypeScript strict mode

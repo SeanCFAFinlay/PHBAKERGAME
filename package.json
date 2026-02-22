@@ -4,7 +4,8 @@
   "private": true,
   "description": "Production-ready Tower Defense Game + Editor Dashboard",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
     "dev:game": "npm run dev --workspace=apps/game",
@@ -32,7 +33,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^3.2.4",
     "typescript": "^5.3.3",
-    "vite": "^5.0.12"
+    "vite": "^5.0.12",
+    "vite-plugin-static-copy": "^3.2.0"
   },
   "engines": {
     "node": ">=18.0.0",

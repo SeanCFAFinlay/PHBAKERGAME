@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -13,11 +13,15 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../../shared/*"],
+      "@shared/*": ["../../packages/shared/src/*"],
       "@assets/*": ["../../assets/*"],
       "@configs/*": ["../../configs/*"]
     }
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
