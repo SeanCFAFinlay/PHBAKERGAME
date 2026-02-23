@@ -104,9 +104,15 @@ export function AssetsTab() {
               <select
                 className="select"
                 value={form.category}
-                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value as AssetCategory }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, category: e.target.value as AssetCategory }))
+                }
               >
-                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="form-group">
@@ -116,7 +122,11 @@ export function AssetsTab() {
                 value={form.theme}
                 onChange={(e) => setForm((f) => ({ ...f, theme: e.target.value as AssetTheme }))}
               >
-                {THEMES.map((t) => <option key={t} value={t}>{t}</option>)}
+                {THEMES.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="form-group">
@@ -126,7 +136,11 @@ export function AssetsTab() {
                 value={form.sizeHint}
                 onChange={(e) => setForm((f) => ({ ...f, sizeHint: e.target.value as SizeHint }))}
               >
-                {SIZE_HINTS.map((s) => <option key={s} value={s}>{s}</option>)}
+                {SIZE_HINTS.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -143,13 +157,33 @@ export function AssetsTab() {
           <div className="form-row form-row--align">
             <div className="form-group">
               <label>Image</label>
-              <button type="button" className="btn btn--secondary" onClick={() => fileRef.current?.click()}>
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={() => fileRef.current?.click()}
+              >
                 Upload Image
               </button>
-              <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleImageUpload}
+              />
             </div>
             {form.imageDataUrl && (
-              <img src={form.imageDataUrl} alt="preview" style={{ width: 48, height: 48, objectFit: 'contain', borderRadius: 8, border: '1px solid #22314a' }} />
+              <img
+                src={form.imageDataUrl}
+                alt="preview"
+                style={{
+                  width: 48,
+                  height: 48,
+                  objectFit: 'contain',
+                  borderRadius: 8,
+                  border: '1px solid #22314a',
+                }}
+              />
             )}
           </div>
           <div className="form-row">
@@ -175,15 +209,37 @@ export function AssetsTab() {
             style={{ flex: 1, maxWidth: 240 }}
           />
           <div className="filter-group">
-            <button className={`filter-btn ${catFilter === 'all' ? 'active' : ''}`} onClick={() => setCatFilter('all')}>all</button>
+            <button
+              className={`filter-btn ${catFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setCatFilter('all')}
+            >
+              all
+            </button>
             {CATEGORIES.map((c) => (
-              <button key={c} className={`filter-btn ${catFilter === c ? 'active' : ''}`} onClick={() => setCatFilter(c)}>{c}</button>
+              <button
+                key={c}
+                className={`filter-btn ${catFilter === c ? 'active' : ''}`}
+                onClick={() => setCatFilter(c)}
+              >
+                {c}
+              </button>
             ))}
           </div>
           <div className="filter-group">
-            <button className={`filter-btn ${themeFilter === 'all' ? 'active' : ''}`} onClick={() => setThemeFilter('all')}>all themes</button>
+            <button
+              className={`filter-btn ${themeFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setThemeFilter('all')}
+            >
+              all themes
+            </button>
             {THEMES.map((t) => (
-              <button key={t} className={`filter-btn ${themeFilter === t ? 'active' : ''}`} onClick={() => setThemeFilter(t)}>{t}</button>
+              <button
+                key={t}
+                className={`filter-btn ${themeFilter === t ? 'active' : ''}`}
+                onClick={() => setThemeFilter(t)}
+              >
+                {t}
+              </button>
             ))}
           </div>
         </div>
@@ -195,11 +251,16 @@ export function AssetsTab() {
         ) : (
           <div className="asset-grid">
             {filtered.map((asset) => (
-              <div key={asset.id} className={`asset-card ${editId === asset.id ? 'asset-card--selected' : ''}`}>
+              <div
+                key={asset.id}
+                className={`asset-card ${editId === asset.id ? 'asset-card--selected' : ''}`}
+              >
                 <div className="asset-card__thumb">
-                  {asset.imageDataUrl
-                    ? <img src={asset.imageDataUrl} alt={asset.name} />
-                    : <span>{asset.emoji || '📦'}</span>}
+                  {asset.imageDataUrl ? (
+                    <img src={asset.imageDataUrl} alt={asset.name} />
+                  ) : (
+                    <span>{asset.emoji || '📦'}</span>
+                  )}
                 </div>
                 <div className="asset-card__info">
                   <div className="asset-card__name">{asset.name}</div>
@@ -209,8 +270,12 @@ export function AssetsTab() {
                   </div>
                 </div>
                 <div className="asset-card__actions">
-                  <button className="btn btn--xs btn--secondary" onClick={() => handleEdit(asset)}>Edit</button>
-                  <button className="btn btn--xs btn--danger" onClick={() => deleteAsset(asset.id)}>Del</button>
+                  <button className="btn btn--xs btn--secondary" onClick={() => handleEdit(asset)}>
+                    Edit
+                  </button>
+                  <button className="btn btn--xs btn--danger" onClick={() => deleteAsset(asset.id)}>
+                    Del
+                  </button>
                 </div>
               </div>
             ))}

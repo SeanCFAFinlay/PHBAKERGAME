@@ -19,7 +19,7 @@ export class GameApp {
       new MenuScreen(this.container, (theme) => {
         this.transitionTo(null);
         this.showMapSelect(theme);
-      }),
+      })
     );
   }
 
@@ -35,8 +35,8 @@ export class GameApp {
         () => {
           this.transitionTo(null);
           this.showMenu();
-        },
-      ),
+        }
+      )
     );
   }
 
@@ -45,7 +45,7 @@ export class GameApp {
       new GameScreen(this.container, map, assets, () => {
         this.transitionTo(null);
         this.showMenu();
-      }),
+      })
     );
   }
 

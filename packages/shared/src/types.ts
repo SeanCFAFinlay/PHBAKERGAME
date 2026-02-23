@@ -17,8 +17,8 @@ export type MapEntityKind = 'spawn' | 'pen' | 'obstacle' | 'towerSpot';
 
 export interface MapEntity {
   assetId: string;
-  x: number;       // 0..1 normalized
-  y: number;       // 0..1 normalized
+  x: number; // 0..1 normalized
+  y: number; // 0..1 normalized
   rotationDeg: number;
   scale: number;
   meta?: { kind?: MapEntityKind };

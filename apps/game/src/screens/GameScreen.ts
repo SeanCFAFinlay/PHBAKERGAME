@@ -45,9 +45,36 @@ interface SpawnQueue {
 }
 
 const DEFAULT_TOWER_TYPES: TowerType[] = [
-  { id: 'basic', name: 'BasicTower', emoji: '🗼', cost: 50, damage: 10, range: 3.0, fireRate: 1.0, color: 0x4488ff },
-  { id: 'ice', name: 'IceTower', emoji: '❄️', cost: 75, damage: 8, range: 3.5, fireRate: 0.8, color: 0x44ccff },
-  { id: 'fire', name: 'FireTower', emoji: '🔥', cost: 100, damage: 20, range: 2.5, fireRate: 1.5, color: 0xff4422 },
+  {
+    id: 'basic',
+    name: 'BasicTower',
+    emoji: '🗼',
+    cost: 50,
+    damage: 10,
+    range: 3.0,
+    fireRate: 1.0,
+    color: 0x4488ff,
+  },
+  {
+    id: 'ice',
+    name: 'IceTower',
+    emoji: '❄️',
+    cost: 75,
+    damage: 8,
+    range: 3.5,
+    fireRate: 0.8,
+    color: 0x44ccff,
+  },
+  {
+    id: 'fire',
+    name: 'FireTower',
+    emoji: '🔥',
+    cost: 100,
+    damage: 20,
+    range: 2.5,
+    fireRate: 1.5,
+    color: 0xff4422,
+  },
 ];
 
 const DEFAULT_PATH: THREE.Vector3[] = [
@@ -110,12 +137,7 @@ export class GameScreen {
   private resizeHandler: () => void;
   private clickHandler: (e: Event) => void;
 
-  constructor(
-    container: HTMLElement,
-    map: MapDefinition,
-    assets: Asset[],
-    onBack: () => void,
-  ) {
+  constructor(container: HTMLElement, map: MapDefinition, assets: Asset[], onBack: () => void) {
     this.container = container;
     this.map = map;
     this.assets = assets;
@@ -214,22 +236,30 @@ export class GameScreen {
       if (kind === 'spawn') {
         mesh = new THREE.Mesh(
           new THREE.SphereGeometry(0.4, 8, 8),
-          new THREE.MeshStandardMaterial({ color: 0x00ff44, emissive: 0x00ff44, emissiveIntensity: 0.5 }),
+          new THREE.MeshStandardMaterial({
+            color: 0x00ff44,
+            emissive: 0x00ff44,
+            emissiveIntensity: 0.5,
+          })
         );
       } else if (kind === 'pen') {
         mesh = new THREE.Mesh(
           new THREE.SphereGeometry(0.4, 8, 8),
-          new THREE.MeshStandardMaterial({ color: 0xff2244, emissive: 0xff2244, emissiveIntensity: 0.5 }),
+          new THREE.MeshStandardMaterial({
+            color: 0xff2244,
+            emissive: 0xff2244,
+            emissiveIntensity: 0.5,
+          })
         );
       } else if (kind === 'obstacle') {
         mesh = new THREE.Mesh(
           new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshStandardMaterial({ color: 0x7a5c2e }),
+          new THREE.MeshStandardMaterial({ color: 0x7a5c2e })
         );
       } else if (kind === 'towerSpot') {
         mesh = new THREE.Mesh(
           new THREE.CylinderGeometry(0.5, 0.5, 0.1, 12),
-          new THREE.MeshStandardMaterial({ color: 0xffcc00 }),
+          new THREE.MeshStandardMaterial({ color: 0xffcc00 })
         );
         mesh.position.set(wx, 0.05, wz);
         this.scene.add(mesh);
@@ -350,16 +380,18 @@ export class GameScreen {
   private getTowerTypes(): TowerType[] {
     const fromAssets = this.assets
       .filter((a) => a.category === 'tower')
-      .map((a, i): TowerType => ({
-        id: a.id,
-        name: a.name,
-        emoji: a.emoji ?? '🗼',
-        cost: 50 + i * 25,
-        damage: 10 + i * 5,
-        range: 3.0,
-        fireRate: 1.0,
-        color: 0x4488ff,
-      }));
+      .map(
+        (a, i): TowerType => ({
+          id: a.id,
+          name: a.name,
+          emoji: a.emoji ?? '🗼',
+          cost: 50 + i * 25,
+          damage: 10 + i * 5,
+          range: 3.0,
+          fireRate: 1.0,
+          color: 0x4488ff,
+        })
+      );
     return fromAssets.length > 0 ? fromAssets : DEFAULT_TOWER_TYPES;
   }
 
@@ -565,24 +597,33 @@ export class GameScreen {
       </button>
     `;
 
-    (this.upgradeSheet.querySelector('#close-upgrade') as HTMLButtonElement).addEventListener('click', () => {
-      this.selectedTower = null;
-      this.upgradeSheet.style.display = 'none';
-    });
-
-    (this.upgradeSheet.querySelector('#upgrade-btn') as HTMLButtonElement).addEventListener('click', () => {
-      if (this.money >= upgradeCost && this.selectedTower) {
-        this.money -= upgradeCost;
-        this.selectedTower.damage += 5;
-        this.selectedTower.upgradeLevel++;
-        this.openUpgradeSheet(this.selectedTower);
-        this.updateHUD();
+    (this.upgradeSheet.querySelector('#close-upgrade') as HTMLButtonElement).addEventListener(
+      'click',
+      () => {
+        this.selectedTower = null;
+        this.upgradeSheet.style.display = 'none';
       }
-    });
+    );
 
-    (this.upgradeSheet.querySelector('#sell-tower-btn') as HTMLButtonElement).addEventListener('click', () => {
-      if (this.selectedTower) this.sellTower(this.selectedTower);
-    });
+    (this.upgradeSheet.querySelector('#upgrade-btn') as HTMLButtonElement).addEventListener(
+      'click',
+      () => {
+        if (this.money >= upgradeCost && this.selectedTower) {
+          this.money -= upgradeCost;
+          this.selectedTower.damage += 5;
+          this.selectedTower.upgradeLevel++;
+          this.openUpgradeSheet(this.selectedTower);
+          this.updateHUD();
+        }
+      }
+    );
+
+    (this.upgradeSheet.querySelector('#sell-tower-btn') as HTMLButtonElement).addEventListener(
+      'click',
+      () => {
+        if (this.selectedTower) this.sellTower(this.selectedTower);
+      }
+    );
   }
 
   private showEndModal(won: boolean): void {
@@ -612,11 +653,12 @@ export class GameScreen {
       </div>
     `;
 
-    (this.modalEl.querySelector('#modal-again') as HTMLButtonElement).addEventListener('click', () =>
-      this.resetGame(),
+    (this.modalEl.querySelector('#modal-again') as HTMLButtonElement).addEventListener(
+      'click',
+      () => this.resetGame()
     );
     (this.modalEl.querySelector('#modal-menu') as HTMLButtonElement).addEventListener('click', () =>
-      this.onBack(),
+      this.onBack()
     );
   }
 
@@ -700,7 +742,7 @@ export class GameScreen {
         enemy.mesh.position.lerpVectors(
           this.path[enemy.pathIndex],
           this.path[enemy.pathIndex + 1],
-          Math.min(enemy.progress, 1),
+          Math.min(enemy.progress, 1)
         );
       }
     }

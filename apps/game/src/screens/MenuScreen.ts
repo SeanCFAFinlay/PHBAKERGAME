@@ -5,10 +5,7 @@ export class MenuScreen {
   private el: HTMLDivElement;
   private container: HTMLElement;
 
-  constructor(
-    container: HTMLElement,
-    onThemeSelect: (theme: 'bakery' | 'dentist') => void,
-  ) {
+  constructor(container: HTMLElement, onThemeSelect: (theme: 'bakery' | 'dentist') => void) {
     this.container = container;
 
     this.el = document.createElement('div');

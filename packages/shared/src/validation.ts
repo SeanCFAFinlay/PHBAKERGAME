@@ -70,11 +70,7 @@ export function importPack(json: string): PackExport {
   if (!Array.isArray(p['maps'])) {
     throw new Error('importPack: maps must be an array');
   }
-  const assets = (p['assets'] as unknown[]).filter(
-    (a) => validateAsset(a).valid,
-  ) as Asset[];
-  const maps = (p['maps'] as unknown[]).filter(
-    (m) => validateMap(m).valid,
-  ) as MapDefinition[];
+  const assets = (p['assets'] as unknown[]).filter((a) => validateAsset(a).valid) as Asset[];
+  const maps = (p['maps'] as unknown[]).filter((m) => validateMap(m).valid) as MapDefinition[];
   return { version: p['version'] as number, assets, maps };
 }

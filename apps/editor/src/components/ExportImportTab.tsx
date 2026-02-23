@@ -27,7 +27,7 @@ export function ExportImportTab() {
   function handleCopy() {
     navigator.clipboard.writeText(getPackJson()).then(
       () => setStatus('Copied to clipboard!'),
-      () => setStatus('Copy failed — check browser permissions.'),
+      () => setStatus('Copy failed — check browser permissions.')
     );
   }
 
@@ -40,7 +40,9 @@ export function ExportImportTab() {
       const newMaps = pack.maps.filter((m) => !existingMapIds.has(m.id));
       setAssets([...assets, ...newAssets]);
       setMaps([...maps, ...newMaps]);
-      setStatus(`Imported: +${newAssets.length} assets, +${newMaps.length} maps (duplicates skipped).`);
+      setStatus(
+        `Imported: +${newAssets.length} assets, +${newMaps.length} maps (duplicates skipped).`
+      );
     } catch (err) {
       setStatus(`Import failed: ${String(err)}`);
     }
@@ -56,15 +58,22 @@ export function ExportImportTab() {
   }
 
   function handleImportText() {
-    if (!rawText.trim()) { setStatus('Paste JSON first.'); return; }
+    if (!rawText.trim()) {
+      setStatus('Paste JSON first.');
+      return;
+    }
     mergePack(rawText);
   }
 
   // Stats
   const catCounts: Record<string, number> = {};
-  assets.forEach((a) => { catCounts[a.category] = (catCounts[a.category] ?? 0) + 1; });
+  assets.forEach((a) => {
+    catCounts[a.category] = (catCounts[a.category] ?? 0) + 1;
+  });
   const themeCounts: Record<string, number> = {};
-  maps.forEach((m) => { themeCounts[m.theme] = (themeCounts[m.theme] ?? 0) + 1; });
+  maps.forEach((m) => {
+    themeCounts[m.theme] = (themeCounts[m.theme] ?? 0) + 1;
+  });
 
   return (
     <div className="tab-content">
@@ -72,10 +81,22 @@ export function ExportImportTab() {
         <h2 className="panel-title">Export / Import Pack</h2>
 
         <div className="controls-row" style={{ marginBottom: 16 }}>
-          <button className="btn btn--primary" onClick={handleExport}>⬇ Export Pack JSON</button>
-          <button className="btn btn--secondary" onClick={handleCopy}>📋 Copy Pack JSON</button>
-          <button className="btn btn--secondary" onClick={() => importFileRef.current?.click()}>⬆ Import Pack JSON</button>
-          <input ref={importFileRef} type="file" accept=".json,application/json" style={{ display: 'none' }} onChange={handleImportFile} />
+          <button className="btn btn--primary" onClick={handleExport}>
+            ⬇ Export Pack JSON
+          </button>
+          <button className="btn btn--secondary" onClick={handleCopy}>
+            📋 Copy Pack JSON
+          </button>
+          <button className="btn btn--secondary" onClick={() => importFileRef.current?.click()}>
+            ⬆ Import Pack JSON
+          </button>
+          <input
+            ref={importFileRef}
+            type="file"
+            accept=".json,application/json"
+            style={{ display: 'none' }}
+            onChange={handleImportFile}
+          />
         </div>
 
         {status && <div className="status-msg">{status}</div>}
@@ -89,7 +110,11 @@ export function ExportImportTab() {
             onChange={(e) => setRawText(e.target.value)}
             placeholder={'{"version":1,"assets":[...],"maps":[...]}'}
           />
-          <button className="btn btn--secondary" style={{ marginTop: 8 }} onClick={handleImportText}>
+          <button
+            className="btn btn--secondary"
+            style={{ marginTop: 8 }}
+            onClick={handleImportText}
+          >
             Import from Text
           </button>
         </div>

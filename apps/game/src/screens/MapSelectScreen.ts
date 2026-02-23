@@ -8,7 +8,7 @@ export class MapSelectScreen {
     container: HTMLElement,
     theme: 'bakery' | 'dentist',
     onMapSelect: (map: MapDefinition) => void,
-    onBack: () => void,
+    onBack: () => void
   ) {
     this.container = container;
 
