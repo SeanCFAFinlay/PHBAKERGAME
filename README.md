@@ -79,6 +79,7 @@ PHBAKERGAME/
 ```
 
 Shared code layout:
+
 - `packages/shared/` exports runtime helpers used by the game/editor (schema, loaders, camera config).
 - `shared/types/` contains type-only definitions consumed by the editor UI.
 

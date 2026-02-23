@@ -11,12 +11,7 @@
   "dependencies": {
     "@phbakergame/shared": "file:../../packages/shared",
     "three": "^0.160.0",
-<<<<<<< copilot/stabilize-repository-builds
-    "stats.js": "^0.17.0",
-    "@phbakergame/shared": "file:../../packages/shared"
-=======
     "stats.js": "^0.17.0"
->>>>>>> main
   },
   "devDependencies": {
     "@types/three": "^0.160.0",

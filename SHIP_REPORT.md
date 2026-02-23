@@ -18,7 +18,7 @@ Successfully stabilized the PHBAKERGAME repository by fixing critical build fail
 - **Root Cause:** The `packages/shared` directory was not included in npm workspaces, causing TypeScript to fail resolving `@phbakergame/shared/*` imports
 - **Fix:** Added `"packages/*"` to the workspaces array in root package.json
 - **Files Changed:**
-  - `package.json` - Added packages/* to workspaces
+  - `package.json` - Added packages/\* to workspaces
   - `package-lock.json` - Updated with new workspace
 - **Verification:**
   ```bash
@@ -152,7 +152,7 @@ Local validation commands exactly match CI workflow steps:
 
 ### Configuration
 
-- `package.json` - Added packages/* to workspaces
+- `package.json` - Added packages/\* to workspaces
 - `package-lock.json` - Updated workspace dependencies
 
 ### Source Code
