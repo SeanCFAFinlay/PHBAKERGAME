@@ -7,6 +7,9 @@
     "./camera": "./src/camera.ts",
     "./schema": "./src/schema.ts",
     "./loaders": "./src/loaders.ts",
-    "./index": "./src/index.ts"
+    "./types": "./src/types.ts",
+    "./validation": "./src/validation.ts",
+    "./index": "./src/index.ts",
+    ".": "./src/index.ts"
   }
 }

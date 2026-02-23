@@ -10,6 +10,7 @@ export default defineConfig({
       '@shared': resolve(__dirname, '../../shared'),
       '@assets': resolve(__dirname, '../../assets'),
       '@configs': resolve(__dirname, '../../configs'),
+      '@pack': resolve(__dirname, '../../packages/shared/src'),
     },
   },
   build: {

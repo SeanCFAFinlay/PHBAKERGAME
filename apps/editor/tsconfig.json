@@ -15,7 +15,8 @@
     "paths": {
       "@shared/*": ["../../shared/*"],
       "@assets/*": ["../../assets/*"],
-      "@configs/*": ["../../configs/*"]
+      "@configs/*": ["../../configs/*"],
+      "@pack/*": ["../../packages/shared/src/*"]
     }
   },
   "include": ["src"],

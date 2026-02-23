@@ -1,22 +1,12 @@
-import { useEffect } from 'react';
-import { useEditorStore } from './store/editorStore';
-import { AssetLibrary } from './components/AssetLibrary';
-import { AssetInspector } from './components/AssetInspector';
-import { AIPreviewPanel } from './components/AIPreviewPanel';
-import { AssetManifestEntry } from '@shared/types';
-import manifestData from '@assets/manifest.json';
-import overridesData from '@configs/overrides.json';
+import { usePackStore } from './store/packStore';
+import { AssetsTab } from './components/AssetsTab';
+import { MapBuilderTab } from './components/MapBuilderTab';
+import { ExportImportTab } from './components/ExportImportTab';
+import { HowItWorksTab } from './components/HowItWorksTab';
 import './App.css';
 
 function App() {
-  const { currentTab, setCurrentTab, setAssets, setOverrides } = useEditorStore();
-
-  useEffect(() => {
-    // Load manifest and overrides on startup
-    setAssets(manifestData.assets as AssetManifestEntry[]);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setOverrides(overridesData as any);
-  }, [setAssets, setOverrides]);
+  const { currentTab, setCurrentTab } = usePackStore();
 
   return (
     <div className="app">
@@ -36,46 +26,31 @@ function App() {
             Assets
           </button>
           <button
-            className={`tab-btn ${currentTab === 'maps' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('maps')}
+            className={`tab-btn ${currentTab === 'mapbuilder' ? 'active' : ''}`}
+            onClick={() => setCurrentTab('mapbuilder')}
           >
-            Maps
+            Map Builder
           </button>
           <button
-            className={`tab-btn ${currentTab === 'waves' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('waves')}
+            className={`tab-btn ${currentTab === 'exportimport' ? 'active' : ''}`}
+            onClick={() => setCurrentTab('exportimport')}
           >
-            Waves
+            Export/Import
           </button>
           <button
-            className={`tab-btn ${currentTab === 'ai-preview' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('ai-preview')}
+            className={`tab-btn ${currentTab === 'howto' ? 'active' : ''}`}
+            onClick={() => setCurrentTab('howto')}
           >
-            AI Preview
+            How It Works
           </button>
         </nav>
       </header>
 
       <main className="app-main">
-        {currentTab === 'assets' && (
-          <div className="two-column-layout">
-            <AssetLibrary />
-            <AssetInspector />
-          </div>
-        )}
-        {currentTab === 'maps' && (
-          <div className="placeholder-panel">
-            <h2>Map Editor</h2>
-            <p>Coming soon - drag and drop path editor, spawn points, defend zones</p>
-          </div>
-        )}
-        {currentTab === 'waves' && (
-          <div className="placeholder-panel">
-            <h2>Wave Editor</h2>
-            <p>Coming soon - wave configuration, enemy types, counts, intervals</p>
-          </div>
-        )}
-        {currentTab === 'ai-preview' && <AIPreviewPanel />}
+        {currentTab === 'assets' && <AssetsTab />}
+        {currentTab === 'mapbuilder' && <MapBuilderTab />}
+        {currentTab === 'exportimport' && <ExportImportTab />}
+        {currentTab === 'howto' && <HowItWorksTab />}
       </main>
     </div>
   );
