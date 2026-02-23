@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import type { Asset, MapDefinition, MapEntity, MapSlot, MapTheme } from '@pack/types';
+import { validateMap } from '@pack/validation';
 import { usePackStore } from '../store/packStore';
 
 const CANVAS_W = 600;
@@ -118,7 +119,13 @@ export function MapBuilderTab() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const m = JSON.parse(reader.result as string) as MapDefinition;
+        const parsed = JSON.parse(reader.result as string);
+        const result = validateMap(parsed);
+        if (!result.valid) {
+          alert(`Invalid map JSON:\n${result.errors.join('\n')}`);
+          return;
+        }
+        const m = parsed as MapDefinition;
         setCurrentMapId(m.id ?? null);
         setMapName(m.name ?? '');
         setTheme(m.theme ?? 'bakery');
