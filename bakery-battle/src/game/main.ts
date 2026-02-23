@@ -24,13 +24,26 @@ function resize(): void {
 window.addEventListener("resize", resize);
 resize();
 
-const battle = createBattle({ cellSize: 48 });
+const battle = createBattle({ cellSize: 48 }) as any;
 
-canvas.addEventListener("click", (e: MouseEvent) => {
+function getPointer(e: MouseEvent): { x: number; y: number } {
   const rect = canvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
-  (battle as any).handleClick(mx, my);
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+canvas.addEventListener("mousemove", (e: MouseEvent) => {
+  const p = getPointer(e);
+  battle.handlePointerMove(p.x, p.y);
+});
+
+canvas.addEventListener("mousedown", (e: MouseEvent) => {
+  const p = getPointer(e);
+  battle.handlePointerMove(p.x, p.y);
+  battle.handlePointerDown(p.x, p.y);
+});
+
+window.addEventListener("keydown", (e: KeyboardEvent) => {
+  battle.handleKeyDown(e.key);
 });
 
 let last = performance.now();
@@ -46,5 +59,5 @@ function loop(now: number): void {
 requestAnimationFrame(loop);
 
 export function startGame(): void {
-  // Game boots on import (kept for compatibility).
+  // Boots on import.
 }
