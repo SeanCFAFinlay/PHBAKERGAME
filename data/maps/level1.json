@@ -1,0 +1,33 @@
+{
+    "waves":  [
+                  {
+                      "spacing":  1.5,
+                      "count":  10,
+                      "enemy":  "Cavity_Creep"
+                  }
+              ],
+    "gridSize":  {
+                     "z":  20,
+                     "x":  20
+                 },
+    "path":  [
+                 {
+                     "z":  10,
+                     "x":  0
+                 },
+                 {
+                     "z":  10,
+                     "x":  5
+                 },
+                 {
+                     "z":  5,
+                     "x":  5
+                 },
+                 {
+                     "z":  5,
+                     "x":  15
+                 }
+             ],
+    "name":  "Kitchen Ambush",
+    "version":  "2.0"
+}

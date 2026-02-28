@@ -1,0 +1,11 @@
+export const GAME_STATS = {
+  STARTING_MONEY: 500,
+  STARTING_LIVES: 20,
+  ENEMY_SPEED: 2.0,
+  TOWER_RANGE: 4.5,
+  COLORS: {
+    BAKERY: 0xffd700,
+    DENTIST: 0x00d4ff,
+    PLAQUE: 0xef4444
+  }
+};
