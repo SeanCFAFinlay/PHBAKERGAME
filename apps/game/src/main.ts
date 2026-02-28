@@ -1,4 +1,4 @@
-import { BattleScene } from '/bakery-battle/scenes/BattleScene.ts';
+﻿import { BattleScene } from '../../../bakery-battle/scenes/BattleScene';
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
@@ -11,3 +11,4 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
