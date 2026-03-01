@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import { Tower } from '../entities/Tower';
-import { Enemy } from '../entities/Enemy';
 
 export class BattleScene {
-    private enemies: Enemy[] = [];
-    private towers: Tower[] = [];
+    private scene: THREE.Scene;
+    private camera: THREE.PerspectiveCamera;
+    private renderer: THREE.WebGLRenderer;
+    private raycaster = new THREE.Raycaster();
+    private mouse = new THREE.Vector2();
     private money: number = 500;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -17,7 +19,7 @@ export class BattleScene {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
 
         this.init();
-        this.setupInteractions(canvas);
+        this.setupInput(canvas);
         this.animate();
     }
 
@@ -28,22 +30,26 @@ export class BattleScene {
         this.scene.add(sun);
     }
 
-    private setupInteractions(canvas: HTMLCanvasElement) {
-        canvas.addEventListener('mousedown', (event) => {
-            // Logic to convert click to grid coordinates
-            // Spend  and place a tower
-            if (this.money >= 100) {
-                const x = Math.round((event.clientX / window.innerWidth) * 16 - 8);
-                const z = Math.round((event.clientY / window.innerHeight) * 16 - 8);
-                const t = new Tower(x, z, "bakery");
-                this.scene.add(t);
+    private setupInput(canvas: HTMLCanvasElement) {
+        canvas.addEventListener('mousedown', (e) => {
+            if (this.money < 100) return;
+            this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+            
+            const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+            const intersection = new THREE.Vector3();
+            if (this.raycaster.ray.intersectPlane(plane, intersection)) {
+                const tx = Math.round(intersection.x);
+                const tz = Math.round(intersection.z);
+                this.scene.add(new Tower(tx, tz, "bakery"));
                 this.money -= 100;
                 document.getElementById('stat-money')!.innerText = '?? $' + this.money;
             }
         });
     }
 
-    animate = () => {
+    private animate = () => {
         requestAnimationFrame(this.animate);
         this.renderer.render(this.scene, this.camera);
     }
