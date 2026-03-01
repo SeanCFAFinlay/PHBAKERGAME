@@ -1,1 +1,0 @@
-import { BattleScene } from "../../../engine/core/BattleScene"; import manifest from "../../../data/themes/manifest.json"; window.addEventListener("load", () => { const theme = manifest.themes[manifest.activeTheme]; const c = document.getElementById("game-canvas"); if(c) new BattleScene(c, theme); });
