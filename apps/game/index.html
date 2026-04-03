@@ -389,7 +389,9 @@ function selectTheme(t) {
     const card = document.createElement('div');
     card.className = 'map-card';
     card.style.setProperty('--c', themeData.color);
-    card.innerHTML = `<div class="map-card-icon">${themeData.icon}</div><div class="map-card-name">${m.name}</div><div class="map-card-info">${m.waves} Waves • ${m.cols}×${m.rows}</div><div class="map-stars">${[1,2,3,4,5].map(n=>`<span class="${n<=m.diff?'on':''}">⭐</span>`).join('')}</div>`;
+    const bs = getBestScore(theme, i), bw = getBestWave(theme, i);
+    const bestTxt = bs > 0 ? `<div class="map-card-info" style="color:var(--gold);font-size:0.7rem;">🏆 ${bs} pts • Wave ${bw}/${m.waves}</div>` : '';
+    card.innerHTML = `<div class="map-card-icon">${themeData.icon}</div><div class="map-card-name">${m.name}</div><div class="map-card-info">${m.waves} Waves • ${m.cols}×${m.rows}</div>${bestTxt}<div class="map-stars">${[1,2,3,4,5].map(n=>`<span class="${n<=m.diff?'on':''}">⭐</span>`).join('')}</div>`;
     card.onclick = () => startGame(i);
     grid.appendChild(card);
   });
@@ -442,6 +444,7 @@ function startGame(idx) {
 
 function exitGame() {
   running = false;
+  if (autoWaveTimer) { clearTimeout(autoWaveTimer); autoWaveTimer = null; }
   selectTheme(theme);
 }
 
@@ -2361,6 +2364,8 @@ function handleCellTap(x, y) {
   if (cell.tower) { showUpgrade(cell.tower); return; }
   hideUpgrade();
   
+  if (sellMode) return;
+  
   if (selectedTower && cell.type === 'ground') {
     const td = themeData.towers.find(t => t.id === selectedTower);
     if (money >= td.cost) {
@@ -2409,6 +2414,19 @@ function updateHUD() {
   document.getElementById('livesVal').textContent = lives;
   document.getElementById('scoreVal').textContent = score;
   document.getElementById('startBtn').disabled = waveActive;
+  if (!waveActive && wave < mapData.waves) {
+    const nextWaveData = WAVES[wave] || {};
+    const counts = Object.entries(nextWaveData).map(([id, n]) => {
+      const ed = themeData.enemies.find(e => e.id === id);
+      return ed ? `${ed.nm.split(' ')[0]}×${n}` : '';
+    }).filter(Boolean).slice(0, 3).join(' ');
+    document.getElementById('startBtn').title = counts ? `Next: ${counts}` : '';
+    document.getElementById('startBtn').textContent = counts ? `▶ W${wave+1}: ${counts.split(' ')[0]}…` : '▶ START WAVE';
+  } else if (waveActive) {
+    document.getElementById('startBtn').textContent = '⚔ FIGHTING…';
+  } else if (wave >= mapData.waves) {
+    document.getElementById('startBtn').textContent = '✓ ALL DONE';
+  }
   renderTowers();
 }
 
@@ -2611,8 +2629,8 @@ function spawnEnemy(ed) {
     z: s.y - hh + 0.5,
     hp: ed.hp * (1 + wave * 0.12),
     maxHp: ed.hp * (1 + wave * 0.12),
-    spd: ed.spd,
-    rwd: ed.rwd,
+    spd: ed.spd * (1 + wave * 0.018),
+    rwd: Math.round(ed.rwd * (1 + Math.floor(wave / 5) * 0.15)),
     sz: ed.sz || 1,
     armor: ed.armor || 0,
     fire: ed.fire || false,
@@ -2686,6 +2704,15 @@ function updateEnemies(dt) {
     if (e.slow > 0) e.slow -= dt;
     if (e.burnT > 0) { e.burnT -= dt; e.hp -= e.burnD * dt; }
 
+    if (e.hp <= 0) {
+      money += e.rwd;
+      score += e.rwd;
+      createExplosion(e.x, e.y, e.z, false, 0xffd700);
+      removeEnemy(e, i);
+      updateHUD();
+      continue;
+    }
+
     // Flying enemies: head straight for BASE (ignore obstacles/towers)
     if (e.flying) {
       const tx = BASE.x - hw + 0.5;
@@ -2704,6 +2731,7 @@ function updateEnemies(dt) {
         lives--;
         removeEnemy(e, i);
         updateHUD();
+        if (checkGameOver()) return;
       }
       continue;
     }
@@ -2725,6 +2753,7 @@ function updateEnemies(dt) {
         lives--;
         removeEnemy(e, i);
         updateHUD();
+        if (checkGameOver()) return;
       }
       continue;
     }
@@ -2794,6 +2823,7 @@ function updateEnemies(dt) {
         lives--;
         removeEnemy(e, i);
         updateHUD();
+        if (checkGameOver()) return;
         break;
       }
     }
@@ -2808,6 +2838,16 @@ function updateEnemies(dt) {
 function removeEnemy(e, i) {
   if (e.mesh) scene.remove(e.mesh);
   enemies.splice(i, 1);
+}
+
+function checkGameOver() {
+  if (lives > 0) return false;
+  if (autoWaveTimer) { clearTimeout(autoWaveTimer); autoWaveTimer = null; }
+  document.getElementById('loseWave').textContent = wave;
+  document.getElementById('loseScore').textContent = score;
+  document.getElementById('loseModal').classList.add('show');
+  running = false;
+  return true;
 }
 
 function updateTowers(t) {
@@ -3086,6 +3126,7 @@ function onResize() {
 }
 
 function closeModal(type) {
+  saveRunResult();
   document.getElementById(type + 'Modal').classList.remove('show');
   selectTheme(theme);
 }
@@ -3096,6 +3137,46 @@ document.querySelectorAll('.speed-btn').forEach(btn => {
     document.querySelectorAll('.speed-btn').forEach(b => b.classList.toggle('active', +b.dataset.speed === gameSpeed));
   };
 });
+
+// =============================================
+// PERSISTENCE: localStorage save/load (v1)
+// =============================================
+const SAVE_KEY = 'bvd_save_v1';
+
+function loadSave() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return { scores: {}, bestWave: {}, settings: {} };
+    const parsed = JSON.parse(raw);
+    return {
+      scores: parsed.scores || {},
+      bestWave: parsed.bestWave || {},
+      settings: parsed.settings || {}
+    };
+  } catch (e) {
+    return { scores: {}, bestWave: {}, settings: {} };
+  }
+}
+
+function writeSave(data) {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+function saveRunResult() {
+  if (!theme || mapIndex == null) return;
+  const save = loadSave();
+  const key = theme + '_' + mapIndex;
+  if (!save.scores[key] || score > save.scores[key]) save.scores[key] = score;
+  if (!save.bestWave[key] || wave > save.bestWave[key]) save.bestWave[key] = wave;
+  writeSave(save);
+}
+
+function getBestScore(t, idx) {
+  return loadSave().scores[t + '_' + idx] || 0;
+}
+
+function getBestWave(t, idx) {
+  return loadSave().bestWave[t + '_' + idx] || 0;
+}
 </script>
-</body>
-</html>
+</body></html>
