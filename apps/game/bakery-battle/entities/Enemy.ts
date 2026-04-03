@@ -1,1 +1,0 @@
-import * as THREE from "three"; export class Enemy extends THREE.Group { constructor(x, z) { super(); this.position.set(x, 0.25, z); this.add(new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 16), new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x330000 }))); } }

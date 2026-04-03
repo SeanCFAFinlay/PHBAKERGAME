@@ -1,9 +1,0 @@
-{
-  "activeTheme": "bakery",
-  "themes": {
-    "bakery": { "tower": "Mixer", "enemy": "Plaque", "vfx": "sprinkles", "primary": "0xffd700", "grid": "0x22c55e" },
-    "dentist": { "tower": "Drill", "enemy": "Cavity", "vfx": "enamel_chips", "primary": "0x00d4ff", "grid": "0x22314a" },
-    "hockey":  { "tower": "Goalie", "enemy": "Puck", "vfx": "ice_shards", "primary": "0xffffff", "grid": "0x00d4ff" },
-    "soccer":  { "tower": "GoalNet", "enemy": "SoccerBall", "vfx": "grass_bits", "primary": "0x22c55e", "grid": "0x0a0c12" }
-  }
-}
