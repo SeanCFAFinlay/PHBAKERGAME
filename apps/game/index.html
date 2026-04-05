@@ -98,23 +98,26 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:-apple-system
 .start-btn { flex:2; background:var(--grass); color:#fff; border:none; font-size:0.9rem; }
 .start-btn:disabled { background:#444; color:#666; }
 
-.upgrade-sheet { position:fixed; bottom:0; left:0; right:0; background:rgba(15,15,25,0.98); border-top:2px solid var(--gold); padding:16px; padding-bottom:calc(16px + var(--safe-bottom)); z-index:200; transform:translateY(100%); transition:transform .25s ease-out; backdrop-filter:blur(20px); border-radius:20px 20px 0 0; }
+.upgrade-sheet { position:fixed; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(15,15,25,0.99) 0%, rgba(15,15,25,0.96) 100%); border-top:3px solid var(--gold); padding:18px; padding-bottom:calc(18px + var(--safe-bottom)); z-index:200; transform:translateY(100%); transition:transform .3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter:blur(20px); border-radius:24px 24px 0 0; box-shadow:0 -8px 32px rgba(0,0,0,0.6); }
 .upgrade-sheet.show { transform:translateY(0); }
-.upgrade-handle { width:36px; height:4px; background:rgba(255,255,255,0.3); border-radius:2px; margin:0 auto 14px; }
-.upgrade-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-.upgrade-icon { font-size:1.8rem; }
-.upgrade-info h3 { font-size:1.1rem; font-weight:700; }
-.upgrade-info p { font-size:0.8rem; color:rgba(255,255,255,0.5); }
-.upgrade-stats { display:flex; gap:10px; margin-bottom:14px; }
-.upgrade-stat { flex:1; background:rgba(255,255,255,0.05); padding:10px 8px; border-radius:10px; text-align:center; }
-.upgrade-stat-label { font-size:0.65rem; color:rgba(255,255,255,0.4); margin-bottom:2px; }
-.upgrade-stat-value { font-size:1rem; font-weight:700; }
-.upgrade-stat-next { font-size:0.75rem; color:var(--grass); }
-.upgrade-btns { display:flex; gap:10px; }
-.upgrade-btn { flex:1; padding:14px; border:none; border-radius:12px; font-size:0.95rem; font-weight:700; }
-.upgrade-btn.sell { background:rgba(239,68,68,0.2); color:var(--red); }
-.upgrade-btn.do-upgrade { background:var(--gold); color:#000; }
-.upgrade-btn:disabled { background:#333; color:#555; }
+.upgrade-handle { width:40px; height:5px; background:rgba(255,215,0,0.4); border-radius:3px; margin:0 auto 16px; }
+.upgrade-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.upgrade-icon { font-size:2.2rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.upgrade-info h3 { font-size:1.2rem; font-weight:800; letter-spacing:0.3px; }
+.upgrade-info p { font-size:0.85rem; color:rgba(255,255,255,0.6); margin-top:2px; }
+.upgrade-stats { display:flex; gap:10px; margin-bottom:16px; }
+.upgrade-stat { flex:1; background:rgba(255,255,255,0.08); padding:12px 8px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.1); }
+.upgrade-stat-label { font-size:0.7rem; color:rgba(255,255,255,0.5); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+.upgrade-stat-value { font-size:1.1rem; font-weight:800; color:var(--gold); }
+.upgrade-stat-next { font-size:0.8rem; color:var(--grass); font-weight:600; margin-top:2px; }
+.upgrade-btns { display:flex; gap:12px; }
+.upgrade-btn { flex:1; padding:16px 12px; border:none; border-radius:14px; font-size:1rem; font-weight:800; transition:all .2s; min-height:56px; }
+.upgrade-btn:active { transform:scale(0.96); }
+.upgrade-btn.sell { background:rgba(239,68,68,0.25); color:var(--red); border:2px solid rgba(239,68,68,0.4); }
+.upgrade-btn.sell:active { background:rgba(239,68,68,0.4); }
+.upgrade-btn.do-upgrade { background:linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); color:#000; box-shadow:0 4px 12px rgba(255,215,0,0.4); }
+.upgrade-btn.do-upgrade:active { box-shadow:0 2px 6px rgba(255,215,0,0.3); }
+.upgrade-btn:disabled { background:#2a2a2a; color:#555; border:2px solid #1a1a1a; box-shadow:none; }
 
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:300; display:none; align-items:center; justify-content:center; padding:20px; }
 .modal-overlay.show { display:flex; }
@@ -2903,44 +2906,48 @@ function createProjectile(tw, target, sx, sz) {
   let geo, mat, speed = 8.5;
   const c = new THREE.Color(td.clr);
 
-  // Theme-specific shapes
+  // Theme-specific shapes - each tower has unique projectile
   if (isBakery) {
     switch(idx) {
-      case 0: // Mixer whisk fling (silver bead)
-        geo = new THREE.SphereGeometry(0.06, 10, 10);
-        mat = new THREE.MeshStandardMaterial({ color: 0xcfd3df, metalness: 0.9, roughness: 0.2, emissive: 0x111111, emissiveIntensity: 0.2 });
-        break;
-      case 1: // Spoon smack (cookie crumb)
-        geo = new THREE.IcosahedronGeometry(0.08, 0);
-        mat = new THREE.MeshStandardMaterial({ color: 0xd7a56a, roughness: 0.9, metalness: 0.0 });
-        speed = 7.5;
-        break;
-      case 2: // Rolling pin (shockwave handled elsewhere; use puff)
-        geo = new THREE.SphereGeometry(0.07, 10, 10);
-        mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7, metalness: 0.0, transparent:true, opacity:0.85 });
-        break;
-      case 3: // Oven mitts (freeze puff)
-        geo = new THREE.SphereGeometry(0.07, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0x7fe9ff, transparent:true, opacity:0.8 });
-        break;
-      case 4: // Piping bag (frosting blob)
-        geo = new THREE.SphereGeometry(0.09, 12, 12);
-        mat = new THREE.MeshStandardMaterial({ color: 0xff7ac0, roughness: 0.25, metalness: 0.05, emissive: 0x7a1b40, emissiveIntensity: 0.2 });
+      case 0: // Mixer - whipped cream dollop (swirly)
+        geo = new THREE.DodecahedronGeometry(0.07, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, metalness: 0.3, roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15 });
         speed = 8.0;
         break;
-      case 5: // Sprinkle gatling (sprinkle)
-        geo = new THREE.CylinderGeometry(0.02, 0.02, 0.12, 8);
-        mat = new THREE.MeshStandardMaterial({ color: c, roughness: 0.35, metalness: 0.05, emissive: c, emissiveIntensity: 0.15 });
+      case 1: // Huge Spoon - chunky cookie crumb
+        geo = new THREE.BoxGeometry(0.1, 0.08, 0.09);
+        mat = new THREE.MeshStandardMaterial({ color: 0xd7a56a, roughness: 0.95, metalness: 0.0 });
+        speed = 7.2;
         break;
-      case 6: // Caramel torch (ember)
-        geo = new THREE.SphereGeometry(0.06, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0xffc14d });
+      case 2: // Rolling Pin - dough ball (flattened sphere)
+        geo = new THREE.SphereGeometry(0.08, 10, 8);
+        mat = new THREE.MeshStandardMaterial({ color: 0xf5deb3, roughness: 0.85, metalness: 0.0 });
+        speed = 7.8;
+        break;
+      case 3: // Oven Mitts - heat puff (glowing orange)
+        geo = new THREE.SphereGeometry(0.09, 10, 10);
+        mat = new THREE.MeshBasicMaterial({ color: 0xff6b35, transparent:true, opacity:0.7 });
+        speed = 8.5;
+        break;
+      case 4: // Piping Bags - frosting swirl (thick pink blob)
+        geo = new THREE.IcosahedronGeometry(0.1, 1);
+        mat = new THREE.MeshStandardMaterial({ color: 0xff7ac0, roughness: 0.2, metalness: 0.1, emissive: 0xff1b8d, emissiveIntensity: 0.25 });
+        speed = 7.5;
+        break;
+      case 5: // Sprinkle Gatling - colorful sprinkle rod
+        geo = new THREE.CylinderGeometry(0.025, 0.025, 0.14, 8);
+        mat = new THREE.MeshStandardMaterial({ color: c, roughness: 0.3, metalness: 0.15, emissive: c, emissiveIntensity: 0.2 });
+        speed = 9.2;
+        break;
+      case 6: // Caramel Torch - sticky caramel glob (amber)
+        geo = new THREE.SphereGeometry(0.08, 12, 12);
+        mat = new THREE.MeshBasicMaterial({ color: 0xffaa33, transparent:true, opacity:0.85 });
+        speed = 8.8;
+        break;
+      case 7: // Golden Trophy - sharp golden bolt (diamond shape)
+        geo = new THREE.OctahedronGeometry(0.09, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 1.0, roughness: 0.1, emissive: 0xffaa00, emissiveIntensity: 0.3 });
         speed = 9.5;
-        break;
-      case 7: // Trophy (gold bolt)
-        geo = new THREE.OctahedronGeometry(0.07, 0);
-        mat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.9, roughness: 0.2, emissive: 0x2a1a00, emissiveIntensity: 0.25 });
-        speed = 9.0;
         break;
       default:
         geo = new THREE.SphereGeometry(0.06, 10, 10);
@@ -2948,44 +2955,45 @@ function createProjectile(tw, target, sx, sz) {
     }
   } else {
     switch(idx) {
-      case 0: // Drill shard
-        geo = new THREE.ConeGeometry(0.05, 0.14, 10);
-        mat = new THREE.MeshStandardMaterial({ color: 0xcfd3df, metalness: 0.95, roughness: 0.15, emissive: 0x111111, emissiveIntensity: 0.2 });
-        speed = 9.0;
+      case 0: // Dental Drill - sharp spinning cone
+        geo = new THREE.ConeGeometry(0.06, 0.16, 8);
+        mat = new THREE.MeshStandardMaterial({ color: 0xcfd3df, metalness: 0.95, roughness: 0.1, emissive: 0x444444, emissiveIntensity: 0.25 });
+        speed = 9.2;
         break;
-      case 1: // X-ray ray
-        geo = new THREE.CylinderGeometry(0.03, 0.03, 0.22, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0x7fe9ff });
-        speed = 10.0;
+      case 1: // X-ray Sniper - thin glowing beam (elongated cylinder)
+        geo = new THREE.CylinderGeometry(0.025, 0.025, 0.25, 10);
+        mat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent:true, opacity:0.9 });
+        speed = 10.5;
         break;
-      case 2: // Scaler shock pellet
-        geo = new THREE.SphereGeometry(0.07, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0x22c7c5, transparent:true, opacity:0.85 });
-        speed = 8.0;
-        break;
-      case 3: // Freeze spray droplet
-        geo = new THREE.SphereGeometry(0.07, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0x7fe9ff, transparent:true, opacity:0.75 });
+      case 2: // Scaler Smash - jagged tooth shard
+        geo = new THREE.TetrahedronGeometry(0.09, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0x22c7c5, roughness: 0.4, metalness: 0.6, emissive: 0x0a4a4a, emissiveIntensity: 0.2 });
         speed = 8.5;
         break;
-      case 4: // Suction glob
-        geo = new THREE.SphereGeometry(0.09, 12, 12);
-        mat = new THREE.MeshStandardMaterial({ color: 0x7fe9ff, roughness: 0.25, metalness: 0.05, emissive: 0x0a3a40, emissiveIntensity: 0.18, transparent:true, opacity:0.85 });
+      case 3: // Freeze Spray - icy mist droplet
+        geo = new THREE.SphereGeometry(0.08, 10, 10);
+        mat = new THREE.MeshBasicMaterial({ color: 0xb3f5ff, transparent:true, opacity:0.6 });
+        speed = 8.8;
         break;
-      case 5: // Floss arc (spark)
-        geo = new THREE.BoxGeometry(0.08, 0.02, 0.02);
+      case 4: // Suction Guard - bubbling purple glob
+        geo = new THREE.IcosahedronGeometry(0.1, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.2, metalness: 0.1, emissive: 0x6b21a8, emissiveIntensity: 0.25, transparent:true, opacity:0.8 });
+        speed = 7.8;
+        break;
+      case 5: // Floss Arc - flat white ribbon
+        geo = new THREE.BoxGeometry(0.12, 0.02, 0.02);
         mat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        speed = 9.5;
+        speed = 9.8;
         break;
-      case 6: // Fluoride ember
-        geo = new THREE.SphereGeometry(0.06, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0xff7a7a });
+      case 6: // Fluoride Burn - toxic red droplet
+        geo = new THREE.SphereGeometry(0.07, 12, 12);
+        mat = new THREE.MeshBasicMaterial({ color: 0xff4444, transparent:true, opacity:0.85 });
         speed = 9.0;
         break;
-      case 7: // Crown laser bolt
-        geo = new THREE.OctahedronGeometry(0.07, 0);
-        mat = new THREE.MeshBasicMaterial({ color: 0xfbbf24 });
-        speed = 10.0;
+      case 7: // Crown Laser - brilliant golden diamond
+        geo = new THREE.OctahedronGeometry(0.09, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 1.0, roughness: 0.05, emissive: 0xffaa00, emissiveIntensity: 0.4 });
+        speed = 10.5;
         break;
       default:
         geo = new THREE.SphereGeometry(0.06, 10, 10);
