@@ -2464,6 +2464,23 @@ function showUpgrade(tower) {
   selectedPlaced = tower;
   const td = themeData.towers.find(t => t.id === tower.type);
   
+  // Add selection ring indicator
+  if (tower.selectionRing) scene.remove(tower.selectionRing);
+  const ringGeo = new THREE.RingGeometry(0.52, 0.58, 32);
+  const ringMat = new THREE.MeshBasicMaterial({ 
+    color: new THREE.Color(td.clr), 
+    transparent: true, 
+    opacity: 0.6, 
+    side: THREE.DoubleSide 
+  });
+  tower.selectionRing = new THREE.Mesh(ringGeo, ringMat);
+  tower.selectionRing.rotation.x = -Math.PI/2;
+  tower.selectionRing.position.set(tower.x - COLS/2 + 0.5, 0.03, tower.y - ROWS/2 + 0.5);
+  scene.add(tower.selectionRing);
+  
+  // Animate ring pulse
+  tower.selectionRing.userData.pulse = 0;
+  
   document.getElementById('upIcon').textContent = td.icon;
   document.getElementById('upName').textContent = td.nm;
   document.getElementById('upLevel').textContent = 'Level ' + (tower.lv + 1);
@@ -2494,6 +2511,10 @@ function showUpgrade(tower) {
 
 function hideUpgrade() {
   document.getElementById('upgradeSheet').classList.remove('show');
+  if (selectedPlaced && selectedPlaced.selectionRing) {
+    scene.remove(selectedPlaced.selectionRing);
+    selectedPlaced.selectionRing = null;
+  }
   selectedPlaced = null;
 }
 
@@ -2681,6 +2702,13 @@ function gameLoop(t) {
   updateProjectiles(dt);
   updateParticles(dt);
   updateAnimations(dt);
+  
+  // Animate selection ring
+  if (selectedPlaced && selectedPlaced.selectionRing) {
+    selectedPlaced.selectionRing.userData.pulse += dt * 3;
+    selectedPlaced.selectionRing.material.opacity = 0.4 + Math.sin(selectedPlaced.selectionRing.userData.pulse) * 0.25;
+    selectedPlaced.selectionRing.rotation.z += dt * 0.8;
+  }
   
   renderer.render(scene, camera);
   
