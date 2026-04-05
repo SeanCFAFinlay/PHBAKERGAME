@@ -992,15 +992,36 @@ function addPerimeterDecor(hw, hh) {
 function generateWaves(num) {
   const waves = [];
   const e = themeData.enemies;
+  const diff = mapData.diff; // 1-10 difficulty tier
+  
+  // Level-specific wave scaling factors
+  const earlyGameMod = diff <= 3 ? 0.8 : 1.0;  // Early levels slightly easier
+  const lateGameMod = diff >= 8 ? 1.15 : 1.0;  // Late levels more intense
+  const scaleMod = earlyGameMod * lateGameMod;
+  
+  // Boss spawn frequency varies by difficulty
+  const bossInterval = diff <= 3 ? 6 : (diff <= 6 ? 5 : 4);
+  
+  // Enemy introduction timing varies by map
+  const introOffsets = [
+    [2, 3, 5, 8, 10],   // Maps 1-2: standard progression
+    [2, 3, 4, 7, 9],    // Maps 3-4: slightly faster
+    [1, 2, 4, 6, 8],    // Maps 5-6: aggressive
+    [2, 3, 5, 7, 9],    // Maps 7-8: mixed
+    [1, 2, 3, 5, 7]     // Maps 9-10: very aggressive
+  ];
+  const offsetTier = Math.min(4, Math.floor(diff / 2));
+  const intro = introOffsets[offsetTier];
+  
   for (let w = 1; w <= num; w++) {
     const wv = {};
-    wv[e[0].id] = 5 + Math.floor(w * 1.3);
-    if (w >= 2) wv[e[1].id] = Math.floor(w * 0.6);
-    if (w >= 3) wv[e[2].id] = Math.floor(w * 0.7);
-    if (w >= 5) wv[e[3].id] = Math.floor((w-3) * 0.4);
-    if (w >= 8) wv[e[4].id] = Math.floor((w-6) * 0.25);
-    if (w >= 10) wv[e[5].id] = Math.floor((w-8) * 0.35);
-    if (w % 5 === 0) wv[e[6].id] = 1 + Math.floor(w / 12);
+    wv[e[0].id] = Math.floor((5 + w * 1.3) * scaleMod);
+    if (w >= intro[0]) wv[e[1].id] = Math.floor(w * 0.6 * scaleMod);
+    if (w >= intro[1]) wv[e[2].id] = Math.floor(w * 0.7 * scaleMod);
+    if (w >= intro[2]) wv[e[3].id] = Math.floor((w-intro[2]+1) * 0.4 * scaleMod);
+    if (w >= intro[3]) wv[e[4].id] = Math.floor((w-intro[3]+1) * 0.25 * scaleMod);
+    if (w >= intro[4]) wv[e[5].id] = Math.floor((w-intro[4]+1) * 0.35 * scaleMod);
+    if (w % bossInterval === 0) wv[e[6].id] = 1 + Math.floor(w / 12);
     waves.push(wv);
   }
   return waves;
@@ -1106,12 +1127,123 @@ function buildBakeryKitchen() {
     scene.add(rim);
   });
 
-  // Decorative obstacles (visual only)
-  addCookieCutter(-hw*0.25, -hh*0.25);
-  addCookieCutter(hw*0.22, hh*0.2);
-  addFlourPile(-hw*0.05, hh*0.05);
-  addWoodenSpoonProp(hw*0.1, -hh*0.2);
-  addHandMixerProp(-hw*0.18, hh*0.22);
+  // Decorative props - map-specific layouts for visual identity
+  const bakeryPropLayouts = [
+    // Map 1: Cupcake Corner - Simple scatter
+    () => {
+      addCookieCutter(-hw*0.25, -hh*0.25);
+      addFlourPile(hw*0.15, hh*0.15);
+      addWoodenSpoonProp(-hw*0.15, hh*0.28);
+    },
+    // Map 2: Sugar Rush - Dense prep area
+    () => {
+      addCookieCutter(-hw*0.30, -hh*0.35);
+      addCookieCutter(hw*0.28, -hh*0.30);
+      addFlourPile(-hw*0.08, hh*0.12);
+      addWoodenSpoonProp(hw*0.18, hh*0.25);
+      addHandMixerProp(-hw*0.22, -hh*0.15);
+    },
+    // Map 3: Marble Counter - Symmetrical workstations
+    () => {
+      addCookieCutter(-hw*0.35, -hh*0.30);
+      addCookieCutter(-hw*0.35, hh*0.30);
+      addFlourPile(hw*0.20, 0);
+      addWoodenSpoonProp(hw*0.32, -hh*0.28);
+      addHandMixerProp(hw*0.32, hh*0.28);
+    },
+    // Map 4: Candy Carnival - Festive chaos
+    () => {
+      addCookieCutter(-hw*0.12, -hh*0.38);
+      addCookieCutter(hw*0.15, hh*0.38);
+      addFlourPile(-hw*0.28, 0);
+      addFlourPile(hw*0.28, 0);
+      addWoodenSpoonProp(0, -hh*0.25);
+      addHandMixerProp(0, hh*0.25);
+    },
+    // Map 5: Wedding Finale - Grand preparation
+    () => {
+      addCookieCutter(-hw*0.38, -hh*0.32);
+      addCookieCutter(-hw*0.38, hh*0.32);
+      addCookieCutter(hw*0.38, -hh*0.32);
+      addCookieCutter(hw*0.38, hh*0.32);
+      addFlourPile(-hw*0.12, -hh*0.18);
+      addFlourPile(hw*0.12, hh*0.18);
+      addWoodenSpoonProp(-hw*0.25, 0);
+      addHandMixerProp(hw*0.25, 0);
+    },
+    // Map 6: Frosting Frenzy - Decorating stations
+    () => {
+      addFlourPile(-hw*0.32, -hh*0.35);
+      addFlourPile(-hw*0.32, hh*0.35);
+      addFlourPile(hw*0.32, -hh*0.35);
+      addFlourPile(hw*0.32, hh*0.35);
+      addWoodenSpoonProp(-hw*0.15, -hh*0.15);
+      addWoodenSpoonProp(hw*0.15, hh*0.15);
+      addHandMixerProp(-hw*0.10, hh*0.30);
+      addHandMixerProp(hw*0.10, -hh*0.30);
+      addCookieCutter(0, 0);
+    },
+    // Map 7: Chocolate Chaos - Production line
+    () => {
+      addCookieCutter(-hw*0.40, -hh*0.38);
+      addWoodenSpoonProp(-hw*0.30, -hh*0.25);
+      addHandMixerProp(-hw*0.20, -hh*0.12);
+      addFlourPile(-hw*0.10, 0);
+      addFlourPile(hw*0.10, 0);
+      addHandMixerProp(hw*0.20, hh*0.12);
+      addWoodenSpoonProp(hw*0.30, hh*0.25);
+      addCookieCutter(hw*0.40, hh*0.38);
+    },
+    // Map 8: Pastry Pandemonium - Multi-tier workspace
+    () => {
+      addCookieCutter(-hw*0.42, -hh*0.40);
+      addCookieCutter(-hw*0.42, 0);
+      addCookieCutter(-hw*0.42, hh*0.40);
+      addFlourPile(-hw*0.18, -hh*0.30);
+      addFlourPile(-hw*0.18, hh*0.30);
+      addWoodenSpoonProp(hw*0.18, -hh*0.30);
+      addWoodenSpoonProp(hw*0.18, hh*0.30);
+      addHandMixerProp(hw*0.38, -hh*0.15);
+      addHandMixerProp(hw*0.38, hh*0.15);
+    },
+    // Map 9: Soufflé Showdown - Master kitchen
+    () => {
+      addFlourPile(-hw*0.38, -hh*0.42);
+      addFlourPile(-hw*0.38, hh*0.42);
+      addFlourPile(hw*0.38, -hh*0.42);
+      addFlourPile(hw*0.38, hh*0.42);
+      addCookieCutter(-hw*0.22, -hh*0.28);
+      addCookieCutter(-hw*0.22, hh*0.28);
+      addCookieCutter(hw*0.22, -hh*0.28);
+      addCookieCutter(hw*0.22, hh*0.28);
+      addWoodenSpoonProp(-hw*0.08, -hh*0.12);
+      addWoodenSpoonProp(hw*0.08, hh*0.12);
+      addHandMixerProp(-hw*0.28, 0);
+      addHandMixerProp(hw*0.28, 0);
+    },
+    // Map 10: Grand Patisserie - Ultimate showcase
+    () => {
+      addCookieCutter(-hw*0.44, -hh*0.44);
+      addCookieCutter(-hw*0.44, 0);
+      addCookieCutter(-hw*0.44, hh*0.44);
+      addCookieCutter(hw*0.44, -hh*0.44);
+      addCookieCutter(hw*0.44, 0);
+      addCookieCutter(hw*0.44, hh*0.44);
+      addFlourPile(-hw*0.28, -hh*0.32);
+      addFlourPile(-hw*0.28, hh*0.32);
+      addFlourPile(hw*0.28, -hh*0.32);
+      addFlourPile(hw*0.28, hh*0.32);
+      addWoodenSpoonProp(-hw*0.15, -hh*0.18);
+      addWoodenSpoonProp(-hw*0.15, hh*0.18);
+      addWoodenSpoonProp(hw*0.15, -hh*0.18);
+      addWoodenSpoonProp(hw*0.15, hh*0.18);
+      addHandMixerProp(0, -hh*0.35);
+      addHandMixerProp(0, hh*0.35);
+    }
+  ];
+  
+  // Execute map-specific layout
+  bakeryPropLayouts[mapIndex]();
   addPerimeterDecor(hw, hh);
 
   addObstacleVisuals(hw, hh);
@@ -1171,11 +1303,132 @@ function buildDentistClinic() {
     scene.add(wall);
   });
 
-  // Dental chair + lamp (visual only)
-  addDentalChair(0, 0);
-  addMouthwashBottle(-hw*0.22, -hh*0.18);
-  addFlossSpool(hw*0.22, -hh*0.1);
-  addMirrorProp(-hw*0.12, hh*0.22);
+  // Dental props - map-specific layouts for visual identity
+  const dentistPropLayouts = [
+    // Map 1: Waiting Room - Simple setup
+    () => {
+      addDentalChair(0, -hh*0.10);
+      addMouthwashBottle(-hw*0.22, hh*0.22);
+      addFlossSpool(hw*0.22, hh*0.22);
+    },
+    // Map 2: Clean & Polish - Basic clinic
+    () => {
+      addDentalChair(-hw*0.15, -hh*0.15);
+      addMouthwashBottle(-hw*0.28, hh*0.25);
+      addFlossSpool(hw*0.28, hh*0.25);
+      addMirrorProp(hw*0.18, -hh*0.28);
+    },
+    // Map 3: Ortho Wing - Dual stations
+    () => {
+      addDentalChair(-hw*0.25, 0);
+      addDentalChair(hw*0.25, 0);
+      addMouthwashBottle(-hw*0.35, -hh*0.30);
+      addFlossSpool(-hw*0.35, hh*0.30);
+      addMirrorProp(hw*0.35, -hh*0.30);
+    },
+    // Map 4: Surgery Suite - Specialized area
+    () => {
+      addDentalChair(0, 0);
+      addMouthwashBottle(-hw*0.30, -hh*0.35);
+      addMouthwashBottle(hw*0.30, -hh*0.35);
+      addFlossSpool(-hw*0.30, hh*0.35);
+      addFlossSpool(hw*0.30, hh*0.35);
+      addMirrorProp(-hw*0.15, -hh*0.22);
+      addMirrorProp(hw*0.15, hh*0.22);
+    },
+    // Map 5: Root Canal Run - Advanced setup
+    () => {
+      addDentalChair(-hw*0.28, -hh*0.20);
+      addDentalChair(hw*0.28, hh*0.20);
+      addMouthwashBottle(-hw*0.38, hh*0.32);
+      addFlossSpool(-hw*0.18, hh*0.35);
+      addFlossSpool(hw*0.18, -hh*0.35);
+      addMirrorProp(hw*0.38, -hh*0.32);
+      addMirrorProp(0, 0);
+    },
+    // Map 6: Molar Mayhem - Multi-chair layout
+    () => {
+      addDentalChair(-hw*0.35, -hh*0.30);
+      addDentalChair(-hw*0.35, hh*0.30);
+      addDentalChair(hw*0.35, 0);
+      addMouthwashBottle(-hw*0.18, -hh*0.15);
+      addMouthwashBottle(-hw*0.18, hh*0.15);
+      addFlossSpool(hw*0.18, -hh*0.30);
+      addFlossSpool(hw*0.18, hh*0.30);
+      addMirrorProp(0, -hh*0.35);
+      addMirrorProp(0, hh*0.35);
+    },
+    // Map 7: Brace Breaker - Production clinic
+    () => {
+      addDentalChair(-hw*0.40, -hh*0.35);
+      addDentalChair(-hw*0.25, 0);
+      addDentalChair(-hw*0.40, hh*0.35);
+      addMouthwashBottle(hw*0.35, -hh*0.38);
+      addMouthwashBottle(hw*0.35, hh*0.38);
+      addFlossSpool(hw*0.20, -hh*0.22);
+      addFlossSpool(hw*0.20, hh*0.22);
+      addMirrorProp(-hw*0.10, -hh*0.28);
+      addMirrorProp(-hw*0.10, hh*0.28);
+    },
+    // Map 8: Wisdom Tooth War - Complex layout
+    () => {
+      addDentalChair(-hw*0.38, -hh*0.38);
+      addDentalChair(-hw*0.38, hh*0.38);
+      addDentalChair(hw*0.38, -hh*0.38);
+      addDentalChair(hw*0.38, hh*0.38);
+      addMouthwashBottle(-hw*0.22, -hh*0.20);
+      addMouthwashBottle(-hw*0.22, hh*0.20);
+      addFlossSpool(hw*0.22, -hh*0.20);
+      addFlossSpool(hw*0.22, hh*0.20);
+      addMirrorProp(0, -hh*0.32);
+      addMirrorProp(0, hh*0.32);
+    },
+    // Map 9: Crown Conquest - Luxury clinic
+    () => {
+      addDentalChair(-hw*0.42, -hh*0.40);
+      addDentalChair(-hw*0.42, 0);
+      addDentalChair(-hw*0.42, hh*0.40);
+      addDentalChair(hw*0.42, -hh*0.40);
+      addDentalChair(hw*0.42, 0);
+      addDentalChair(hw*0.42, hh*0.40);
+      addMouthwashBottle(-hw*0.25, -hh*0.28);
+      addMouthwashBottle(-hw*0.25, hh*0.28);
+      addMouthwashBottle(hw*0.25, -hh*0.28);
+      addMouthwashBottle(hw*0.25, hh*0.28);
+      addFlossSpool(-hw*0.12, -hh*0.35);
+      addFlossSpool(-hw*0.12, hh*0.35);
+      addFlossSpool(hw*0.12, -hh*0.35);
+      addFlossSpool(hw*0.12, hh*0.35);
+      addMirrorProp(0, 0);
+    },
+    // Map 10: Periodontal Peak - Ultimate facility
+    () => {
+      addDentalChair(-hw*0.44, -hh*0.42);
+      addDentalChair(-hw*0.44, -hh*0.14);
+      addDentalChair(-hw*0.44, hh*0.14);
+      addDentalChair(-hw*0.44, hh*0.42);
+      addDentalChair(hw*0.44, -hh*0.42);
+      addDentalChair(hw*0.44, -hh*0.14);
+      addDentalChair(hw*0.44, hh*0.14);
+      addDentalChair(hw*0.44, hh*0.42);
+      addMouthwashBottle(-hw*0.28, -hh*0.35);
+      addMouthwashBottle(-hw*0.28, 0);
+      addMouthwashBottle(-hw*0.28, hh*0.35);
+      addMouthwashBottle(hw*0.28, -hh*0.35);
+      addMouthwashBottle(hw*0.28, 0);
+      addMouthwashBottle(hw*0.28, hh*0.35);
+      addFlossSpool(-hw*0.15, -hh*0.25);
+      addFlossSpool(-hw*0.15, hh*0.25);
+      addFlossSpool(hw*0.15, -hh*0.25);
+      addFlossSpool(hw*0.15, hh*0.25);
+      addMirrorProp(0, -hh*0.40);
+      addMirrorProp(0, 0);
+      addMirrorProp(0, hh*0.40);
+    }
+  ];
+  
+  // Execute map-specific layout
+  dentistPropLayouts[mapIndex]();
   addPerimeterDecor(hw, hh);
 
   addObstacleVisuals(hw, hh);
