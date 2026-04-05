@@ -98,23 +98,26 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:-apple-system
 .start-btn { flex:2; background:var(--grass); color:#fff; border:none; font-size:0.9rem; }
 .start-btn:disabled { background:#444; color:#666; }
 
-.upgrade-sheet { position:fixed; bottom:0; left:0; right:0; background:rgba(15,15,25,0.98); border-top:2px solid var(--gold); padding:16px; padding-bottom:calc(16px + var(--safe-bottom)); z-index:200; transform:translateY(100%); transition:transform .25s ease-out; backdrop-filter:blur(20px); border-radius:20px 20px 0 0; }
+.upgrade-sheet { position:fixed; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(15,15,25,0.99) 0%, rgba(15,15,25,0.96) 100%); border-top:3px solid var(--gold); padding:18px; padding-bottom:calc(18px + var(--safe-bottom)); z-index:200; transform:translateY(100%); transition:transform .3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter:blur(20px); border-radius:24px 24px 0 0; box-shadow:0 -8px 32px rgba(0,0,0,0.6); }
 .upgrade-sheet.show { transform:translateY(0); }
-.upgrade-handle { width:36px; height:4px; background:rgba(255,255,255,0.3); border-radius:2px; margin:0 auto 14px; }
-.upgrade-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-.upgrade-icon { font-size:1.8rem; }
-.upgrade-info h3 { font-size:1.1rem; font-weight:700; }
-.upgrade-info p { font-size:0.8rem; color:rgba(255,255,255,0.5); }
-.upgrade-stats { display:flex; gap:10px; margin-bottom:14px; }
-.upgrade-stat { flex:1; background:rgba(255,255,255,0.05); padding:10px 8px; border-radius:10px; text-align:center; }
-.upgrade-stat-label { font-size:0.65rem; color:rgba(255,255,255,0.4); margin-bottom:2px; }
-.upgrade-stat-value { font-size:1rem; font-weight:700; }
-.upgrade-stat-next { font-size:0.75rem; color:var(--grass); }
-.upgrade-btns { display:flex; gap:10px; }
-.upgrade-btn { flex:1; padding:14px; border:none; border-radius:12px; font-size:0.95rem; font-weight:700; }
-.upgrade-btn.sell { background:rgba(239,68,68,0.2); color:var(--red); }
-.upgrade-btn.do-upgrade { background:var(--gold); color:#000; }
-.upgrade-btn:disabled { background:#333; color:#555; }
+.upgrade-handle { width:40px; height:5px; background:rgba(255,215,0,0.4); border-radius:3px; margin:0 auto 16px; }
+.upgrade-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.upgrade-icon { font-size:2.2rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.upgrade-info h3 { font-size:1.2rem; font-weight:800; letter-spacing:0.3px; }
+.upgrade-info p { font-size:0.85rem; color:rgba(255,255,255,0.6); margin-top:2px; }
+.upgrade-stats { display:flex; gap:10px; margin-bottom:16px; }
+.upgrade-stat { flex:1; background:rgba(255,255,255,0.08); padding:12px 8px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.1); }
+.upgrade-stat-label { font-size:0.7rem; color:rgba(255,255,255,0.5); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+.upgrade-stat-value { font-size:1.1rem; font-weight:800; color:var(--gold); }
+.upgrade-stat-next { font-size:0.8rem; color:var(--grass); font-weight:600; margin-top:2px; }
+.upgrade-btns { display:flex; gap:12px; }
+.upgrade-btn { flex:1; padding:16px 12px; border:none; border-radius:14px; font-size:1rem; font-weight:800; transition:all .2s; min-height:56px; }
+.upgrade-btn:active { transform:scale(0.96); }
+.upgrade-btn.sell { background:rgba(239,68,68,0.25); color:var(--red); border:2px solid rgba(239,68,68,0.4); }
+.upgrade-btn.sell:active { background:rgba(239,68,68,0.4); }
+.upgrade-btn.do-upgrade { background:linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); color:#000; box-shadow:0 4px 12px rgba(255,215,0,0.4); }
+.upgrade-btn.do-upgrade:active { box-shadow:0 2px 6px rgba(255,215,0,0.3); }
+.upgrade-btn:disabled { background:#2a2a2a; color:#555; border:2px solid #1a1a1a; box-shadow:none; }
 
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:300; display:none; align-items:center; justify-content:center; padding:20px; }
 .modal-overlay.show { display:flex; }
@@ -989,15 +992,36 @@ function addPerimeterDecor(hw, hh) {
 function generateWaves(num) {
   const waves = [];
   const e = themeData.enemies;
+  const diff = mapData.diff; // 1-10 difficulty tier
+  
+  // Level-specific wave scaling factors
+  const earlyGameMod = diff <= 3 ? 0.8 : 1.0;  // Early levels slightly easier
+  const lateGameMod = diff >= 8 ? 1.15 : 1.0;  // Late levels more intense
+  const scaleMod = earlyGameMod * lateGameMod;
+  
+  // Boss spawn frequency varies by difficulty
+  const bossInterval = diff <= 3 ? 6 : (diff <= 6 ? 5 : 4);
+  
+  // Enemy introduction timing varies by map
+  const introOffsets = [
+    [2, 3, 5, 8, 10],   // Maps 1-2: standard progression
+    [2, 3, 4, 7, 9],    // Maps 3-4: slightly faster
+    [1, 2, 4, 6, 8],    // Maps 5-6: aggressive
+    [2, 3, 5, 7, 9],    // Maps 7-8: mixed
+    [1, 2, 3, 5, 7]     // Maps 9-10: very aggressive
+  ];
+  const offsetTier = Math.min(4, Math.floor(diff / 2));
+  const intro = introOffsets[offsetTier];
+  
   for (let w = 1; w <= num; w++) {
     const wv = {};
-    wv[e[0].id] = 5 + Math.floor(w * 1.3);
-    if (w >= 2) wv[e[1].id] = Math.floor(w * 0.6);
-    if (w >= 3) wv[e[2].id] = Math.floor(w * 0.7);
-    if (w >= 5) wv[e[3].id] = Math.floor((w-3) * 0.4);
-    if (w >= 8) wv[e[4].id] = Math.floor((w-6) * 0.25);
-    if (w >= 10) wv[e[5].id] = Math.floor((w-8) * 0.35);
-    if (w % 5 === 0) wv[e[6].id] = 1 + Math.floor(w / 12);
+    wv[e[0].id] = Math.floor((5 + w * 1.3) * scaleMod);
+    if (w >= intro[0]) wv[e[1].id] = Math.floor(w * 0.6 * scaleMod);
+    if (w >= intro[1]) wv[e[2].id] = Math.floor(w * 0.7 * scaleMod);
+    if (w >= intro[2]) wv[e[3].id] = Math.floor((w-intro[2]+1) * 0.4 * scaleMod);
+    if (w >= intro[3]) wv[e[4].id] = Math.floor((w-intro[3]+1) * 0.25 * scaleMod);
+    if (w >= intro[4]) wv[e[5].id] = Math.floor((w-intro[4]+1) * 0.35 * scaleMod);
+    if (w % bossInterval === 0) wv[e[6].id] = 1 + Math.floor(w / 12);
     waves.push(wv);
   }
   return waves;
@@ -1103,12 +1127,123 @@ function buildBakeryKitchen() {
     scene.add(rim);
   });
 
-  // Decorative obstacles (visual only)
-  addCookieCutter(-hw*0.25, -hh*0.25);
-  addCookieCutter(hw*0.22, hh*0.2);
-  addFlourPile(-hw*0.05, hh*0.05);
-  addWoodenSpoonProp(hw*0.1, -hh*0.2);
-  addHandMixerProp(-hw*0.18, hh*0.22);
+  // Decorative props - map-specific layouts for visual identity
+  const bakeryPropLayouts = [
+    // Map 1: Cupcake Corner - Simple scatter
+    () => {
+      addCookieCutter(-hw*0.25, -hh*0.25);
+      addFlourPile(hw*0.15, hh*0.15);
+      addWoodenSpoonProp(-hw*0.15, hh*0.28);
+    },
+    // Map 2: Sugar Rush - Dense prep area
+    () => {
+      addCookieCutter(-hw*0.30, -hh*0.35);
+      addCookieCutter(hw*0.28, -hh*0.30);
+      addFlourPile(-hw*0.08, hh*0.12);
+      addWoodenSpoonProp(hw*0.18, hh*0.25);
+      addHandMixerProp(-hw*0.22, -hh*0.15);
+    },
+    // Map 3: Marble Counter - Symmetrical workstations
+    () => {
+      addCookieCutter(-hw*0.35, -hh*0.30);
+      addCookieCutter(-hw*0.35, hh*0.30);
+      addFlourPile(hw*0.20, 0);
+      addWoodenSpoonProp(hw*0.32, -hh*0.28);
+      addHandMixerProp(hw*0.32, hh*0.28);
+    },
+    // Map 4: Candy Carnival - Festive chaos
+    () => {
+      addCookieCutter(-hw*0.12, -hh*0.38);
+      addCookieCutter(hw*0.15, hh*0.38);
+      addFlourPile(-hw*0.28, 0);
+      addFlourPile(hw*0.28, 0);
+      addWoodenSpoonProp(0, -hh*0.25);
+      addHandMixerProp(0, hh*0.25);
+    },
+    // Map 5: Wedding Finale - Grand preparation
+    () => {
+      addCookieCutter(-hw*0.38, -hh*0.32);
+      addCookieCutter(-hw*0.38, hh*0.32);
+      addCookieCutter(hw*0.38, -hh*0.32);
+      addCookieCutter(hw*0.38, hh*0.32);
+      addFlourPile(-hw*0.12, -hh*0.18);
+      addFlourPile(hw*0.12, hh*0.18);
+      addWoodenSpoonProp(-hw*0.25, 0);
+      addHandMixerProp(hw*0.25, 0);
+    },
+    // Map 6: Frosting Frenzy - Decorating stations
+    () => {
+      addFlourPile(-hw*0.32, -hh*0.35);
+      addFlourPile(-hw*0.32, hh*0.35);
+      addFlourPile(hw*0.32, -hh*0.35);
+      addFlourPile(hw*0.32, hh*0.35);
+      addWoodenSpoonProp(-hw*0.15, -hh*0.15);
+      addWoodenSpoonProp(hw*0.15, hh*0.15);
+      addHandMixerProp(-hw*0.10, hh*0.30);
+      addHandMixerProp(hw*0.10, -hh*0.30);
+      addCookieCutter(0, 0);
+    },
+    // Map 7: Chocolate Chaos - Production line
+    () => {
+      addCookieCutter(-hw*0.40, -hh*0.38);
+      addWoodenSpoonProp(-hw*0.30, -hh*0.25);
+      addHandMixerProp(-hw*0.20, -hh*0.12);
+      addFlourPile(-hw*0.10, 0);
+      addFlourPile(hw*0.10, 0);
+      addHandMixerProp(hw*0.20, hh*0.12);
+      addWoodenSpoonProp(hw*0.30, hh*0.25);
+      addCookieCutter(hw*0.40, hh*0.38);
+    },
+    // Map 8: Pastry Pandemonium - Multi-tier workspace
+    () => {
+      addCookieCutter(-hw*0.42, -hh*0.40);
+      addCookieCutter(-hw*0.42, 0);
+      addCookieCutter(-hw*0.42, hh*0.40);
+      addFlourPile(-hw*0.18, -hh*0.30);
+      addFlourPile(-hw*0.18, hh*0.30);
+      addWoodenSpoonProp(hw*0.18, -hh*0.30);
+      addWoodenSpoonProp(hw*0.18, hh*0.30);
+      addHandMixerProp(hw*0.38, -hh*0.15);
+      addHandMixerProp(hw*0.38, hh*0.15);
+    },
+    // Map 9: Soufflé Showdown - Master kitchen
+    () => {
+      addFlourPile(-hw*0.38, -hh*0.42);
+      addFlourPile(-hw*0.38, hh*0.42);
+      addFlourPile(hw*0.38, -hh*0.42);
+      addFlourPile(hw*0.38, hh*0.42);
+      addCookieCutter(-hw*0.22, -hh*0.28);
+      addCookieCutter(-hw*0.22, hh*0.28);
+      addCookieCutter(hw*0.22, -hh*0.28);
+      addCookieCutter(hw*0.22, hh*0.28);
+      addWoodenSpoonProp(-hw*0.08, -hh*0.12);
+      addWoodenSpoonProp(hw*0.08, hh*0.12);
+      addHandMixerProp(-hw*0.28, 0);
+      addHandMixerProp(hw*0.28, 0);
+    },
+    // Map 10: Grand Patisserie - Ultimate showcase
+    () => {
+      addCookieCutter(-hw*0.44, -hh*0.44);
+      addCookieCutter(-hw*0.44, 0);
+      addCookieCutter(-hw*0.44, hh*0.44);
+      addCookieCutter(hw*0.44, -hh*0.44);
+      addCookieCutter(hw*0.44, 0);
+      addCookieCutter(hw*0.44, hh*0.44);
+      addFlourPile(-hw*0.28, -hh*0.32);
+      addFlourPile(-hw*0.28, hh*0.32);
+      addFlourPile(hw*0.28, -hh*0.32);
+      addFlourPile(hw*0.28, hh*0.32);
+      addWoodenSpoonProp(-hw*0.15, -hh*0.18);
+      addWoodenSpoonProp(-hw*0.15, hh*0.18);
+      addWoodenSpoonProp(hw*0.15, -hh*0.18);
+      addWoodenSpoonProp(hw*0.15, hh*0.18);
+      addHandMixerProp(0, -hh*0.35);
+      addHandMixerProp(0, hh*0.35);
+    }
+  ];
+  
+  // Execute map-specific layout
+  bakeryPropLayouts[mapIndex]();
   addPerimeterDecor(hw, hh);
 
   addObstacleVisuals(hw, hh);
@@ -1168,11 +1303,132 @@ function buildDentistClinic() {
     scene.add(wall);
   });
 
-  // Dental chair + lamp (visual only)
-  addDentalChair(0, 0);
-  addMouthwashBottle(-hw*0.22, -hh*0.18);
-  addFlossSpool(hw*0.22, -hh*0.1);
-  addMirrorProp(-hw*0.12, hh*0.22);
+  // Dental props - map-specific layouts for visual identity
+  const dentistPropLayouts = [
+    // Map 1: Waiting Room - Simple setup
+    () => {
+      addDentalChair(0, -hh*0.10);
+      addMouthwashBottle(-hw*0.22, hh*0.22);
+      addFlossSpool(hw*0.22, hh*0.22);
+    },
+    // Map 2: Clean & Polish - Basic clinic
+    () => {
+      addDentalChair(-hw*0.15, -hh*0.15);
+      addMouthwashBottle(-hw*0.28, hh*0.25);
+      addFlossSpool(hw*0.28, hh*0.25);
+      addMirrorProp(hw*0.18, -hh*0.28);
+    },
+    // Map 3: Ortho Wing - Dual stations
+    () => {
+      addDentalChair(-hw*0.25, 0);
+      addDentalChair(hw*0.25, 0);
+      addMouthwashBottle(-hw*0.35, -hh*0.30);
+      addFlossSpool(-hw*0.35, hh*0.30);
+      addMirrorProp(hw*0.35, -hh*0.30);
+    },
+    // Map 4: Surgery Suite - Specialized area
+    () => {
+      addDentalChair(0, 0);
+      addMouthwashBottle(-hw*0.30, -hh*0.35);
+      addMouthwashBottle(hw*0.30, -hh*0.35);
+      addFlossSpool(-hw*0.30, hh*0.35);
+      addFlossSpool(hw*0.30, hh*0.35);
+      addMirrorProp(-hw*0.15, -hh*0.22);
+      addMirrorProp(hw*0.15, hh*0.22);
+    },
+    // Map 5: Root Canal Run - Advanced setup
+    () => {
+      addDentalChair(-hw*0.28, -hh*0.20);
+      addDentalChair(hw*0.28, hh*0.20);
+      addMouthwashBottle(-hw*0.38, hh*0.32);
+      addFlossSpool(-hw*0.18, hh*0.35);
+      addFlossSpool(hw*0.18, -hh*0.35);
+      addMirrorProp(hw*0.38, -hh*0.32);
+      addMirrorProp(0, 0);
+    },
+    // Map 6: Molar Mayhem - Multi-chair layout
+    () => {
+      addDentalChair(-hw*0.35, -hh*0.30);
+      addDentalChair(-hw*0.35, hh*0.30);
+      addDentalChair(hw*0.35, 0);
+      addMouthwashBottle(-hw*0.18, -hh*0.15);
+      addMouthwashBottle(-hw*0.18, hh*0.15);
+      addFlossSpool(hw*0.18, -hh*0.30);
+      addFlossSpool(hw*0.18, hh*0.30);
+      addMirrorProp(0, -hh*0.35);
+      addMirrorProp(0, hh*0.35);
+    },
+    // Map 7: Brace Breaker - Production clinic
+    () => {
+      addDentalChair(-hw*0.40, -hh*0.35);
+      addDentalChair(-hw*0.25, 0);
+      addDentalChair(-hw*0.40, hh*0.35);
+      addMouthwashBottle(hw*0.35, -hh*0.38);
+      addMouthwashBottle(hw*0.35, hh*0.38);
+      addFlossSpool(hw*0.20, -hh*0.22);
+      addFlossSpool(hw*0.20, hh*0.22);
+      addMirrorProp(-hw*0.10, -hh*0.28);
+      addMirrorProp(-hw*0.10, hh*0.28);
+    },
+    // Map 8: Wisdom Tooth War - Complex layout
+    () => {
+      addDentalChair(-hw*0.38, -hh*0.38);
+      addDentalChair(-hw*0.38, hh*0.38);
+      addDentalChair(hw*0.38, -hh*0.38);
+      addDentalChair(hw*0.38, hh*0.38);
+      addMouthwashBottle(-hw*0.22, -hh*0.20);
+      addMouthwashBottle(-hw*0.22, hh*0.20);
+      addFlossSpool(hw*0.22, -hh*0.20);
+      addFlossSpool(hw*0.22, hh*0.20);
+      addMirrorProp(0, -hh*0.32);
+      addMirrorProp(0, hh*0.32);
+    },
+    // Map 9: Crown Conquest - Luxury clinic
+    () => {
+      addDentalChair(-hw*0.42, -hh*0.40);
+      addDentalChair(-hw*0.42, 0);
+      addDentalChair(-hw*0.42, hh*0.40);
+      addDentalChair(hw*0.42, -hh*0.40);
+      addDentalChair(hw*0.42, 0);
+      addDentalChair(hw*0.42, hh*0.40);
+      addMouthwashBottle(-hw*0.25, -hh*0.28);
+      addMouthwashBottle(-hw*0.25, hh*0.28);
+      addMouthwashBottle(hw*0.25, -hh*0.28);
+      addMouthwashBottle(hw*0.25, hh*0.28);
+      addFlossSpool(-hw*0.12, -hh*0.35);
+      addFlossSpool(-hw*0.12, hh*0.35);
+      addFlossSpool(hw*0.12, -hh*0.35);
+      addFlossSpool(hw*0.12, hh*0.35);
+      addMirrorProp(0, 0);
+    },
+    // Map 10: Periodontal Peak - Ultimate facility
+    () => {
+      addDentalChair(-hw*0.44, -hh*0.42);
+      addDentalChair(-hw*0.44, -hh*0.14);
+      addDentalChair(-hw*0.44, hh*0.14);
+      addDentalChair(-hw*0.44, hh*0.42);
+      addDentalChair(hw*0.44, -hh*0.42);
+      addDentalChair(hw*0.44, -hh*0.14);
+      addDentalChair(hw*0.44, hh*0.14);
+      addDentalChair(hw*0.44, hh*0.42);
+      addMouthwashBottle(-hw*0.28, -hh*0.35);
+      addMouthwashBottle(-hw*0.28, 0);
+      addMouthwashBottle(-hw*0.28, hh*0.35);
+      addMouthwashBottle(hw*0.28, -hh*0.35);
+      addMouthwashBottle(hw*0.28, 0);
+      addMouthwashBottle(hw*0.28, hh*0.35);
+      addFlossSpool(-hw*0.15, -hh*0.25);
+      addFlossSpool(-hw*0.15, hh*0.25);
+      addFlossSpool(hw*0.15, -hh*0.25);
+      addFlossSpool(hw*0.15, hh*0.25);
+      addMirrorProp(0, -hh*0.40);
+      addMirrorProp(0, 0);
+      addMirrorProp(0, hh*0.40);
+    }
+  ];
+  
+  // Execute map-specific layout
+  dentistPropLayouts[mapIndex]();
   addPerimeterDecor(hw, hh);
 
   addObstacleVisuals(hw, hh);
@@ -2461,6 +2717,23 @@ function showUpgrade(tower) {
   selectedPlaced = tower;
   const td = themeData.towers.find(t => t.id === tower.type);
   
+  // Add selection ring indicator
+  if (tower.selectionRing) scene.remove(tower.selectionRing);
+  const ringGeo = new THREE.RingGeometry(0.52, 0.58, 32);
+  const ringMat = new THREE.MeshBasicMaterial({ 
+    color: new THREE.Color(td.clr), 
+    transparent: true, 
+    opacity: 0.6, 
+    side: THREE.DoubleSide 
+  });
+  tower.selectionRing = new THREE.Mesh(ringGeo, ringMat);
+  tower.selectionRing.rotation.x = -Math.PI/2;
+  tower.selectionRing.position.set(tower.x - COLS/2 + 0.5, 0.03, tower.y - ROWS/2 + 0.5);
+  scene.add(tower.selectionRing);
+  
+  // Animate ring pulse
+  tower.selectionRing.userData.pulse = 0;
+  
   document.getElementById('upIcon').textContent = td.icon;
   document.getElementById('upName').textContent = td.nm;
   document.getElementById('upLevel').textContent = 'Level ' + (tower.lv + 1);
@@ -2491,6 +2764,10 @@ function showUpgrade(tower) {
 
 function hideUpgrade() {
   document.getElementById('upgradeSheet').classList.remove('show');
+  if (selectedPlaced && selectedPlaced.selectionRing) {
+    scene.remove(selectedPlaced.selectionRing);
+    selectedPlaced.selectionRing = null;
+  }
   selectedPlaced = null;
 }
 
@@ -2678,6 +2955,13 @@ function gameLoop(t) {
   updateProjectiles(dt);
   updateParticles(dt);
   updateAnimations(dt);
+  
+  // Animate selection ring
+  if (selectedPlaced && selectedPlaced.selectionRing) {
+    selectedPlaced.selectionRing.userData.pulse += dt * 3;
+    selectedPlaced.selectionRing.material.opacity = 0.4 + Math.sin(selectedPlaced.selectionRing.userData.pulse) * 0.25;
+    selectedPlaced.selectionRing.rotation.z += dt * 0.8;
+  }
   
   renderer.render(scene, camera);
   
@@ -2903,44 +3187,48 @@ function createProjectile(tw, target, sx, sz) {
   let geo, mat, speed = 8.5;
   const c = new THREE.Color(td.clr);
 
-  // Theme-specific shapes
+  // Theme-specific shapes - each tower has unique projectile
   if (isBakery) {
     switch(idx) {
-      case 0: // Mixer whisk fling (silver bead)
-        geo = new THREE.SphereGeometry(0.06, 10, 10);
-        mat = new THREE.MeshStandardMaterial({ color: 0xcfd3df, metalness: 0.9, roughness: 0.2, emissive: 0x111111, emissiveIntensity: 0.2 });
-        break;
-      case 1: // Spoon smack (cookie crumb)
-        geo = new THREE.IcosahedronGeometry(0.08, 0);
-        mat = new THREE.MeshStandardMaterial({ color: 0xd7a56a, roughness: 0.9, metalness: 0.0 });
-        speed = 7.5;
-        break;
-      case 2: // Rolling pin (shockwave handled elsewhere; use puff)
-        geo = new THREE.SphereGeometry(0.07, 10, 10);
-        mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.7, metalness: 0.0, transparent:true, opacity:0.85 });
-        break;
-      case 3: // Oven mitts (freeze puff)
-        geo = new THREE.SphereGeometry(0.07, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0x7fe9ff, transparent:true, opacity:0.8 });
-        break;
-      case 4: // Piping bag (frosting blob)
-        geo = new THREE.SphereGeometry(0.09, 12, 12);
-        mat = new THREE.MeshStandardMaterial({ color: 0xff7ac0, roughness: 0.25, metalness: 0.05, emissive: 0x7a1b40, emissiveIntensity: 0.2 });
+      case 0: // Mixer - whipped cream dollop (swirly)
+        geo = new THREE.DodecahedronGeometry(0.07, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, metalness: 0.3, roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15 });
         speed = 8.0;
         break;
-      case 5: // Sprinkle gatling (sprinkle)
-        geo = new THREE.CylinderGeometry(0.02, 0.02, 0.12, 8);
-        mat = new THREE.MeshStandardMaterial({ color: c, roughness: 0.35, metalness: 0.05, emissive: c, emissiveIntensity: 0.15 });
+      case 1: // Huge Spoon - chunky cookie crumb
+        geo = new THREE.BoxGeometry(0.1, 0.08, 0.09);
+        mat = new THREE.MeshStandardMaterial({ color: 0xd7a56a, roughness: 0.95, metalness: 0.0 });
+        speed = 7.2;
         break;
-      case 6: // Caramel torch (ember)
-        geo = new THREE.SphereGeometry(0.06, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0xffc14d });
+      case 2: // Rolling Pin - dough ball (flattened sphere)
+        geo = new THREE.SphereGeometry(0.08, 10, 8);
+        mat = new THREE.MeshStandardMaterial({ color: 0xf5deb3, roughness: 0.85, metalness: 0.0 });
+        speed = 7.8;
+        break;
+      case 3: // Oven Mitts - heat puff (glowing orange)
+        geo = new THREE.SphereGeometry(0.09, 10, 10);
+        mat = new THREE.MeshBasicMaterial({ color: 0xff6b35, transparent:true, opacity:0.7 });
+        speed = 8.5;
+        break;
+      case 4: // Piping Bags - frosting swirl (thick pink blob)
+        geo = new THREE.IcosahedronGeometry(0.1, 1);
+        mat = new THREE.MeshStandardMaterial({ color: 0xff7ac0, roughness: 0.2, metalness: 0.1, emissive: 0xff1b8d, emissiveIntensity: 0.25 });
+        speed = 7.5;
+        break;
+      case 5: // Sprinkle Gatling - colorful sprinkle rod
+        geo = new THREE.CylinderGeometry(0.025, 0.025, 0.14, 8);
+        mat = new THREE.MeshStandardMaterial({ color: c, roughness: 0.3, metalness: 0.15, emissive: c, emissiveIntensity: 0.2 });
+        speed = 9.2;
+        break;
+      case 6: // Caramel Torch - sticky caramel glob (amber)
+        geo = new THREE.SphereGeometry(0.08, 12, 12);
+        mat = new THREE.MeshBasicMaterial({ color: 0xffaa33, transparent:true, opacity:0.85 });
+        speed = 8.8;
+        break;
+      case 7: // Golden Trophy - sharp golden bolt (diamond shape)
+        geo = new THREE.OctahedronGeometry(0.09, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 1.0, roughness: 0.1, emissive: 0xffaa00, emissiveIntensity: 0.3 });
         speed = 9.5;
-        break;
-      case 7: // Trophy (gold bolt)
-        geo = new THREE.OctahedronGeometry(0.07, 0);
-        mat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.9, roughness: 0.2, emissive: 0x2a1a00, emissiveIntensity: 0.25 });
-        speed = 9.0;
         break;
       default:
         geo = new THREE.SphereGeometry(0.06, 10, 10);
@@ -2948,44 +3236,45 @@ function createProjectile(tw, target, sx, sz) {
     }
   } else {
     switch(idx) {
-      case 0: // Drill shard
-        geo = new THREE.ConeGeometry(0.05, 0.14, 10);
-        mat = new THREE.MeshStandardMaterial({ color: 0xcfd3df, metalness: 0.95, roughness: 0.15, emissive: 0x111111, emissiveIntensity: 0.2 });
-        speed = 9.0;
+      case 0: // Dental Drill - sharp spinning cone
+        geo = new THREE.ConeGeometry(0.06, 0.16, 8);
+        mat = new THREE.MeshStandardMaterial({ color: 0xcfd3df, metalness: 0.95, roughness: 0.1, emissive: 0x444444, emissiveIntensity: 0.25 });
+        speed = 9.2;
         break;
-      case 1: // X-ray ray
-        geo = new THREE.CylinderGeometry(0.03, 0.03, 0.22, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0x7fe9ff });
-        speed = 10.0;
+      case 1: // X-ray Sniper - thin glowing beam (elongated cylinder)
+        geo = new THREE.CylinderGeometry(0.025, 0.025, 0.25, 10);
+        mat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent:true, opacity:0.9 });
+        speed = 10.5;
         break;
-      case 2: // Scaler shock pellet
-        geo = new THREE.SphereGeometry(0.07, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0x22c7c5, transparent:true, opacity:0.85 });
-        speed = 8.0;
-        break;
-      case 3: // Freeze spray droplet
-        geo = new THREE.SphereGeometry(0.07, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0x7fe9ff, transparent:true, opacity:0.75 });
+      case 2: // Scaler Smash - jagged tooth shard
+        geo = new THREE.TetrahedronGeometry(0.09, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0x22c7c5, roughness: 0.4, metalness: 0.6, emissive: 0x0a4a4a, emissiveIntensity: 0.2 });
         speed = 8.5;
         break;
-      case 4: // Suction glob
-        geo = new THREE.SphereGeometry(0.09, 12, 12);
-        mat = new THREE.MeshStandardMaterial({ color: 0x7fe9ff, roughness: 0.25, metalness: 0.05, emissive: 0x0a3a40, emissiveIntensity: 0.18, transparent:true, opacity:0.85 });
+      case 3: // Freeze Spray - icy mist droplet
+        geo = new THREE.SphereGeometry(0.08, 10, 10);
+        mat = new THREE.MeshBasicMaterial({ color: 0xb3f5ff, transparent:true, opacity:0.6 });
+        speed = 8.8;
         break;
-      case 5: // Floss arc (spark)
-        geo = new THREE.BoxGeometry(0.08, 0.02, 0.02);
+      case 4: // Suction Guard - bubbling purple glob
+        geo = new THREE.IcosahedronGeometry(0.1, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.2, metalness: 0.1, emissive: 0x6b21a8, emissiveIntensity: 0.25, transparent:true, opacity:0.8 });
+        speed = 7.8;
+        break;
+      case 5: // Floss Arc - flat white ribbon
+        geo = new THREE.BoxGeometry(0.12, 0.02, 0.02);
         mat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        speed = 9.5;
+        speed = 9.8;
         break;
-      case 6: // Fluoride ember
-        geo = new THREE.SphereGeometry(0.06, 10, 10);
-        mat = new THREE.MeshBasicMaterial({ color: 0xff7a7a });
+      case 6: // Fluoride Burn - toxic red droplet
+        geo = new THREE.SphereGeometry(0.07, 12, 12);
+        mat = new THREE.MeshBasicMaterial({ color: 0xff4444, transparent:true, opacity:0.85 });
         speed = 9.0;
         break;
-      case 7: // Crown laser bolt
-        geo = new THREE.OctahedronGeometry(0.07, 0);
-        mat = new THREE.MeshBasicMaterial({ color: 0xfbbf24 });
-        speed = 10.0;
+      case 7: // Crown Laser - brilliant golden diamond
+        geo = new THREE.OctahedronGeometry(0.09, 0);
+        mat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 1.0, roughness: 0.05, emissive: 0xffaa00, emissiveIntensity: 0.4 });
+        speed = 10.5;
         break;
       default:
         geo = new THREE.SphereGeometry(0.06, 10, 10);
